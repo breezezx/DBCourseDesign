@@ -12,7 +12,7 @@ namespace No9Gallery.Services
         public static string conString = "User Id=C##DBCD;Password=12345678;Data Source=localhost:1521/orcl";
     }
 
-    public class FakeLoginService: ILoginServiceInterface
+    public class FakeLoginService: ILoginService
     {
 
         public async Task<LoginUser> CheckLogin(string ID, string password)
@@ -28,7 +28,7 @@ namespace No9Gallery.Services
                     {
                         con.Open();
                         cmd.BindByName = true;
-                        cmd.CommandText = "select * from users where ID = '" + ID + "' and password = '" + password + "'";
+                        cmd.CommandText = "select * from users where user_ID = '" + ID + "' and password = '" + password + "'";
                         OracleDataReader reader = cmd.ExecuteReader();
 
                         if (reader.Read() != false)

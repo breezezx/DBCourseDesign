@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Search";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/MainPage/MainPage.css" />
+</head>
+
+<div style="position:absolute;top:60px;left:300px;">
+    <img src="~/image/Search/banner.png">
+</div>
+
+<div  style="position:absolute;top:430px;left:300px;">
+    <img src="~/image/Search/result.png" />
+</div>
+
+<div class="search-image">
+        @{
+            int topp = 480;
+            int leftt = 300;
+            int i = 0;
+            int cur = 0;
+            foreach (var work in ViewBag.imagelist)
+            {
+                if (cur == ViewBag.imagelist.Count) { break; }
+                <a asp-controller="PictureInfo" asp-action="Index" asp-route-id="">
+                    <img src="~/image/MainPage/Card.png" class="WorkCard" style="position:absolute; top:@(topp)px; left: @(leftt)px">
+                    <img src="~/image/works/@(ViewBag.imagelist[i].picture)" style="position:absolute; top:@(topp)px; left: @(leftt)px" class="Works" alt="image wrong">
+                    <span class="WorkName" style="position:absolute; top:@(topp + 200)px; left: @(leftt + 16)px">@ViewBag.imagelist[i].headline</span>
+                </a>
+                i++;
+                leftt += 268;
+                if (i % 5 == 0)
+                {
+                    topp += 260;
+                    leftt = 300;
+                }
+            }
+            if (ViewBag.imagelist.Count == 0)
+            {
+                <div style = "height:60px;width:1320px;position:absolute;top:@(topp + 180)px;left:300px;text-align:center;line-height:60px;font-size:30px;font-weight:bold;" > Not Found!</div >
+
+            }
+        }
+</div>

@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    @using System.Security.Claims;
+}
+
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -7,30 +12,102 @@
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/Header/Header.css" />
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
-    <link rel="stylesheet" href="~/css/site.css" />
+
+    <style type="text/css">
+        * {
+            background: #FAFAFA;
+            font: Google Sans;
+            color: #112D4E;
+        }
+
+    
+    </style>
+    <script src="~/js/jquery-3.4.1.js">
+        @{ var search_value="";}
+        $(document).ready(function () {
+            $("input.search-btn").click(function () {
+                @search_value = $("input.search-box").val();
+            });
+        });
+    </script>
 </head>
 <body>
+    <header class="页眉">
+        <nav class="导航栏">
+            <ul id="menu" style="list-style:none;">
+                <li style="position: absolute;left: 360px;top: 13px;" class="Logo">
+                    <a asp-area="" asp-controller="Home" asp-action="Index">No9Gallery</a>
+                </li>
 
-    <div class="container">
+                <li style="position: absolute;left: 520px;top: 0px;">
+                    <a asp-area="" asp-controller="Home" asp-action="Classification"><img src="~/image/Header/Classification.png" /></a>
+                </li>
+                <li style="position: absolute;left: 660px;top: 0px;">
+                    <a asp-area="" asp-controller="Home" asp-action="Follow"><img src="~/image/Header/Follow.png" /></a>
+                </li>
+
+            </ul>
+            <style type="text/css">
+                #menu li a.last {
+                    border-right: 0; /* 去掉左侧边框 */
+                }
+            </style>
+            <form asp-action="Search" asp-controller="Home" class="parent">
+                <input  style="position: absolute;left: 1200px;top: 12px;" type="text"  class="search-box" placeholder="Search" name="search_value">
+                <button style="position: absolute;left: 1458px;top: 20px;" type ="submit" class="search-btn"></button>
+            </form>
+
+            
+            @{
+                //
+                //需要获取用户ID
+                //
+
+                //当用户未登录
+                if (User.Identity.Name == null)
+                {
+
+                    <a style="position: absolute;left: 1520px;top: 12px;" asp-controller="Login" asp-action="Welcome">
+                        <div class="avatarBox">
+                            <img src="~/image/avatar/null.png" class="avatar" />
+                        </div>
+                    </a>
+
+                }
+                //当用户已经登录
+                else
+                {
+                    <a style="position: absolute;left: 1520px;top: 12px;" asp-controller="PersonInfo" asp-action="Index" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value">
+                        <div class="avatarBox">
+                            <img src="~/image/avatar/@User.Claims.SingleOrDefault(sa => sa.Type == "Avatar").Value" class="avatar" />
+                        </div>
+                    </a>
+
+                    <a asp-controller="Login" asp-action="Welcome">
+                        <img src="~/image/Header/SignOut.png" style="position:absolute; top:20px; left:1570px"/>
+                    </a>
+
+                }
+            }
+
+        </nav>
+    </header>
+    <div >
         <partial name="_CookieConsentPartial" />
-        <main role="main" class="pb-3">
+        <main>            
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2019 - No9Gallery - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

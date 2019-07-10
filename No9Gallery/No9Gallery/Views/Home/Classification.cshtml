@@ -1,0 +1,89 @@
+﻿@{
+    ViewData["Title"] = "Classification";
+}
+
+<html>
+<head>
+    <link rel="stylesheet" href="~/css/MainPage/MainPage.css" />
+
+</head>
+
+<body>
+<div style="position:absolute;top:60px;left:300px;">
+    <img src="~/image/Classification/banner.png">
+</div>
+
+<div class="classify-classify" style="position:absolute;top:420px;left:300px;height:40px;width:1320px">
+    @{
+        var classify = new string[] { "classify1", "classify2", "classify3", "classify4", "classify5" };
+        var sort = new string[] { "sort1", "sort2", "sort3" };
+        classify[ViewBag.classify - 1] += "_s";
+        sort[ViewBag.sort - 1] += "_s";
+    }
+    <a class="classify-illustration" asp-action="Classification" asp-route-id=@(10+ViewBag.sort)>
+        <img src="@("/image/Classification/"+classify[0]+".png")" style="height:40px;width:120px;position:absolute;top:0px;left:0px;" />
+    </a>
+    <a class="classify-phototype" asp-action="Classification" asp-route-id=@(20+ViewBag.sort)>
+        <img src="@("/image/Classification/"+classify[1]+".png")" style="height:40px;width:120px;position:absolute;top:0px;left:140px;" />
+    </a>
+    <a class="classify-animation" asp-action="Classification" asp-route-id=@(30+ViewBag.sort)>
+        <img src="@("/image/Classification/"+classify[2]+".png")" style="height:40px;width:120px;position:absolute;top:0px;left:280px;" />
+    </a>
+    <a class="classify-uidesign" asp-action="Classification" asp-route-id=@(40+ViewBag.sort)>
+        <img src="@("/image/Classification/"+classify[3]+".png")" style="height:40px;width:120px;position:absolute;top:0px;left:420px;" />
+    </a>
+    <a class="classify-painting" asp-action="Classification" asp-route-id=@(50+ViewBag.sort)>
+        <img src="@("/image/Classification/"+classify[4]+".png")" style="height:40px;width:120px;position:absolute;top:0px;left:560px;" />
+    </a>
+    <a class="sort-like" asp-action="Classification" asp-route-id=@(ViewBag.classify*10+1)>
+        <img src="@("/image/Classification/"+sort[0]+".png")" style="height:40px;width:90px;position:absolute;top:0px;left:1010px;" />
+    </a>
+    <a class="sort-collect" asp-action="Classification" asp-route-id=@(ViewBag.classify*10+2)>
+        <img src="@("/image/Classification/"+sort[1]+".png")" style="height:40px;width:90px;position:absolute;top:0px;left:1120px;" />
+    </a>
+    <a class="sort-time" asp-action="Classification" asp-route-id=@(ViewBag.classify*10+3)>
+        <img src="@("/image/Classification/"+sort[2]+".png")" style="height:40px;width:90px;position:absolute;top:0px;left:1230px;" />
+    </a>
+</div>
+
+
+<script>
+    function refresh() {
+        $.ajax({
+            type: "GET"
+            URL:"Classification/21"
+
+    });
+    }
+
+
+</script>
+<div id="show" class="classify-image">
+
+
+    @{
+        int topp = 480;
+        int leftt = 300;
+        int i = 0;
+        int cur = 0;
+        foreach (var work in ViewBag.imagelist)
+        {
+            if (cur == ViewBag.imagelist.Count) { break; }
+            <a asp-controller="PictureInfo" asp-action="Index" asp-route-id="">
+                <img src="~/image/MainPage/Card.png" class="WorkCard" style="position:absolute; top:@(topp)px; left: @(leftt)px">
+                <img src="~/image/works/@(ViewBag.imagelist[i].picture)" style="position:absolute; top:@(topp)px; left: @(leftt)px" class="Works" alt="image wrong">
+                <span class="WorkName" style="position:absolute; top:@(topp + 200)px; left: @(leftt + 16)px">@ViewBag.imagelist[i].headline</span>
+            </a>
+            i++;
+            leftt += 268;
+            if (i % 5 == 0)
+            {
+                topp += 260;
+                leftt = 300;
+            }
+        }
+    }
+</div>
+
+</body>
+</html>

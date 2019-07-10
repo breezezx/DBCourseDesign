@@ -1,8 +1,78 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Index";
 }
 
-<div class="text-center">
-    <h1 class="display-4">@User.Claims.SingleOrDefault(sa => sa.Type == "Avatar").Value</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<head>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+    <link rel="stylesheet" href="~/css/MainPage/MainPage.css" />
+</head>
+
+@{
+    //
+    //第一部分的四张图片
+    //
+}
+<div>
+     <a asp-controller="PictureInfo" asp-action="Index" asp-route-id=1><img src="~/image/MainPage/Show1.png" alt="image wrong" class="Show" style="position: absolute;left: 300px;top: 60px;"></a>
+     <a asp-controller="PictureInfo" asp-action="Index" asp-route-id=2><img src="~/image/MainPage/Show2.png" alt="image wrong" style="position: absolute;left: 1032px;top: 60px;" class="Show"></a>
+     <a asp-controller="PictureInfo" asp-action="Index" asp-route-id=3><img src="~/image/MainPage/Show3.png" alt="image wrong" style="position: absolute;left: 1032px;top: 332px;" class="Show"></a>
+     <a asp-controller="PictureInfo" asp-action="Index" asp-route-id=4><img src="~/image/MainPage/Show4.png" alt="image wrong" style="position: absolute;left: 1332px;top: 332px;" class="Show"></a>
+</div>
+
+@{
+    //
+    //第一部分的段落
+    //
+}
+<div>
+    <span style="position: absolute;left: 795px;top: 622px;" class="Title">No.9 Gallery</span>
+    <span style="position: absolute;left: 632px;top: 708px;" class="Introduction">Lorem ipsum dolor st amet, consectetur adipsicingelit, sed do eiusmod tempor incididunt</span>
+</div>
+
+@{
+    //
+    //分类连接图片，调用Classification
+    //
+}
+<div>
+    <a asp-controller="Home" asp-action="Classification" asp-route-id=13><img src="~/image/MainPage/Illustration.png" alt="image wrong" style="position: absolute;left: 300px;top: 780px;" class="TypeList"></a>
+    <a asp-controller="Home" asp-action="Classification" asp-route-id=23><img src="~/image/MainPage/Photograph.png" alt="image wrong" style="position: absolute;left: 635px;top: 780px;" class="TypeList"></a>
+    <a asp-controller="Home" asp-action="Classification" asp-route-id=33><img src="~/image/MainPage/Animation.png" alt="image wrong" style="position: absolute;left: 970px;top: 780px;" class="TypeList"></a>
+    <a asp-controller="Home" asp-action="Classification" asp-route-id=43><img src="~/image/MainPage/UI Design.png" alt="image wrong" style="position: absolute;left: 1305px;top: 780px;" class="TypeList"></a>
+</div>
+
+@{
+//
+//第二部分展示图片和名字
+//
+}
+<div>
+    <img style="position: absolute;left: 300px;top: 1180px;" src="~/image/MainPage/组 142.png" />
+    
+        @{
+            int topp = 1230;
+            int leftt = 300;
+            int i = 0;
+            foreach (var work in Model.Works)
+            {
+                <a asp-controller="PictureInfo" asp-action="Index" asp-route-id=@(work.work_ID)>
+                    <img src="~/image/MainPage/Card.png" class="WorkCard" style="position:absolute; top:@(topp)px; left: @(leftt)px">
+                    <img src="~/image/works/@(work.picture)" style="position:absolute; top:@(topp)px; left: @(leftt)px" class="Works" alt="image wrong" />
+                    <span class="WorkName" style="position:absolute; top:@(topp + 200)px; left: @(leftt + 16)px">@work.headline</span>
+                </a>
+                i++;
+                leftt += 268;
+                if(i%5 == 0)
+                {
+                    topp += 260;
+                    leftt = 300;
+                }
+            }
+        }
 </div>
