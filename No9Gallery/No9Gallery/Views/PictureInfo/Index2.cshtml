@@ -1,0 +1,210 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<head>
+    <title>作品界面</title>
+    <link rel="stylesheet" href="./css/work_style.css" />
+</head>
+<body>
+    <div class="container" style="width:960px">
+        <div class="row">
+            <div id="show_photo" style="position:absolute;left:480px;top:60px;width:960px;height:720px;">
+                <img :src="testwork_photo" style="width:100%; height:100%" />
+            </div>
+            <div id="container" style="width:960px;">
+                <div class="header" style="width:960px;">
+                    <a asp-controller="asp/PictureInfoController" asp-action="AddReport">
+                        <img src="/image/work_res/complain.png" onclick="complain()" alt="complain" id="complain" style="position:absolute;left:1380px;top:810px" />
+                    </a>
+                    <a asp-controller="asp/PictureInfoController" asp-action="AddLikes">
+                        <img src="/image/work_res/like.png" onclick="likeChangeImg()" alt="like" id="like" style="position:absolute;left:1100px;top:940px" />
+                    </a>
+                    <a asp-controller="asp/PictureInfoController" asp-action="AddCollection">
+                        <img src="/image/work_res/collect.png" onclick="collectChangeImg()" alt="collect" id="collect" style="position:absolute;left:1200px;top:940px" />
+                    </a>
+                </div>
+
+                <div id="headline-component">
+                    <div style="position:absolute;left:480px;top:810px">
+                        <div v-if="isViewReady == true">
+                            <div>{{ works.headline }}</div>
+                        </div>
+                        <div v-else>
+                            <div>Loading data...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="label-component" style="position:absolute;left:1260px;top:800px">
+                    <div v-if="isViewReady == true">
+                        <div v-for="p in label">
+                            <div v-if="{{p}}=='Animation'" align="right">
+                                <a :herf="turnurl">
+                                    <img src="/image/work_res/Animation.png" alt="{{p}}" />
+                                </a>
+                            </div>
+                            <div v-else-if="{{p}}=='Illustration' " align="right">
+                                <a :herf="turnurl">
+                                    <img src="/image/work_res/Illustration.png" alt="{{p}}" style="position:absolute;top:800px" />
+                                </a>
+                            </div>
+                            <div v-else-if="{{p}}=='Painting' " align="right">
+                                <a :herf="turnurl">
+                                    <img src="/image/work_res/Painting.png" alt="{{p}}" style="position:absolute;top:800px" />
+                                </a>
+                            </div>
+                            <div v-else-if="{{p}}=='Photograph' " align="right">
+                                <a :herf="turnurl">
+                                    <img src="/image/work_res/Photograph.png" alt="{{p}}" style="position:absolute;top:800px" />
+                                </a>
+                            </div>
+                            <div v-else-if="{{p}}=='UI_Design' " align="right">
+                                <a :herf="turnurl">
+                                    <img src="/image/work_res/UI_Design.png" alt="{{p}}" style="position:absolute;top:800px" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <div>Loading data...</div>
+                    </div>
+                </div>
+
+                <div id="introduction-component">
+                    <div style="position:absolute;left:480px;top:840px">
+                        <div v-if="isViewReady == true">
+                            {{ works.introduction }}
+                        </div>
+                        <div v-else>
+                            <div>Loading data...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="follow-component" style="position:absolute;left:490px;top:940px">
+                    <div v-if="{{works.ifFollowed}} == false">
+                        <a asp-controller="asp/GetCollectController" asp-action="FollowAction">
+                            <img src="/image/work_res/follow.png" onclick="followChangeImg()" alt="follow" id="follow" />
+                        </a>
+                    </div>
+                    <div v-else>
+                        <img hidden src="/image/work_res/follow.png" onclick="followChangeImg()" alt="follow" id="follow" />
+                    </div>
+                </div>
+
+                <div id="avatar-component" style="position:absolute;left:480px;top:940px">
+                    <div v-if="isViewReady == true">
+                        <a :herf="turnurl">
+                            <img src="/image/work_res/avatar.png" alt="avatar" />
+                        </a>
+                    </div>
+                    <div v-else>
+                        <div>Loading data...</div>
+                    </div>
+                </div>
+
+                <div id="user-component" style="position:absolute;left:615px;top:945px">
+                    <div v-if="isViewReady == true">
+                        {{ works.user_ID}}
+                    </div>
+                    <div v-else>
+                        <div>Loading data...</div>
+                    </div>
+                </div>
+
+                <div id="likes-component" style="position:absolute;left:1140px;top:940px">
+                    <div v-if="isViewReady == true">
+                        {{ works.likes_num }}
+                    </div>
+                    <div v-else>
+                        <div>Loading data...</div>
+                    </div>
+                </div>
+
+                <div id="collect-component" style="position:absolute;left:1240px;top:940px">
+                    <div v-if="isViewReady == true">
+                        {{ works.collect_num}}
+                    </div>
+                    <div v-else>
+                        <div>Loading data...</div>
+                    </div>
+                </div>
+
+                <div id="point-component">
+                    <div style="position:absolute;left:1345px;top:940px">
+                        <div v-if="isViewReady == true">
+                            {{ works.points_need }}
+                        </div>
+                        <div v-else>
+                            <div>Loading data...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="download-component">
+                    <div v-if="{{works.ifEnoughPoints}} == false">
+                        
+                            <img src="/image/work_res/download.png" onclick="download()" alt="download" id="download" style="position:absolute;left:1300px;top:940px" />
+                       
+                    </div>
+                    <div v-else>
+                        <img hidden src="/image/work_res/download.png" onclick="download()" alt="download" id="download" style="position:absolute;left:1300px;top:940px" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div id="show_head" style="position:absolute;left:480px;top:1020px">
+            <a target="_blank" href="//weibo.com/">
+                <img alt="新用户" src="/image/work_res/head_portrait.png" />
+            </a>
+        </div>
+        <div id="comment_publish" style="position:absolute;left:540px;top:1020px">
+            <form asp-controller="PictureInfo" asp-action="AddCommentContent">
+                <input type="text" v-model="new_comment" style="overflow:hidden;height:23px;width:800px;" />
+                <input type="submit" style="position:absolute;width:100px;left:810px;top:0px" value="评论" />
+            </form>
+        </div>
+        <div id="comment_list_componet" style="position:absolute;left:480px;top:1100px">
+            <div v-for="c in comments">
+                <a target="_blank" href="//weibo.com/">
+                    <img alt="新用户" src="/image/work_res/head_portrait.png" />
+                </a>
+                <a class="comment" target="_blank" href="//weiboooo.com/">
+                    {{c.user_ID}}
+                </a>
+                <br>
+                <span class="content">
+                    {{c.content}}
+                </span>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        function followChangeImg() {
+            var obj = document.getElementById("follow")
+            obj.setAttribute("src", "../../image/work_res/followed.png")
+        }
+        function likeChangeImg() {
+            var obj = document.getElementById("like")
+            obj.setAttribute("src", "../../image/work_res/liked.png")
+        }
+        function collectChangeImg() {
+            var obj = document.getElementById("collect")
+            obj.setAttribute("src", "../../image/work_res/collected.png")
+        }
+        function download() {
+            alert("you have downloaded the work successfully!")
+        }
+        function complain() {
+            alert("you have complained the work successfully!")
+        }
+    </script>
+</body>
+
+@section Scripts{
+    <script src="/lib/vue/vue.js"></script>
+    <script src="/lib/axios/axios.js"></script>
+    <script src="/js/VueWork.js"></script>
+}

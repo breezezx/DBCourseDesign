@@ -12,7 +12,6 @@
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/Header/Header.css" />
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -23,14 +22,28 @@
     </environment>
 
     <style type="text/css">
-        * {
+        body{
             background: #FAFAFA;
-            font: Google Sans;
+            font-family: Google Sans;
             color: #112D4E;
         }
+        a:link {
+            color: #112D4E;
+            text-decoration: none;
+        }
 
-    
+        a:visited {
+            color: #112D4E;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #112D4E;
+            text-decoration: none;
+        }
     </style>
+
+    <link rel="stylesheet" href="~/css/Header/Header.css" />
     <script src="~/js/jquery-3.4.1.js">
         @{ var search_value="";}
         $(document).ready(function () {
@@ -44,7 +57,7 @@
     <header class="页眉">
         <nav class="导航栏">
             <ul id="menu" style="list-style:none;">
-                <li style="position: absolute;left: 360px;top: 13px;" class="Logo">
+                <li style="position: absolute;left: 360px;top: 15px;" class="Logo">
                     <a asp-area="" asp-controller="Home" asp-action="Index">No9Gallery</a>
                 </li>
 
@@ -62,11 +75,11 @@
                 }
             </style>
             <form asp-action="Search" asp-controller="Home" class="parent">
-                <input  style="position: absolute;left: 1200px;top: 12px;" type="text"  class="search-box" placeholder="Search" name="search_value">
-                <button style="position: absolute;left: 1458px;top: 20px;" type ="submit" class="search-btn"></button>
+                <input style="position: absolute;left: 1200px;top: 12px;" type="text" class="search-box" placeholder="Search" name="search_value">
+                <button style="position: absolute;left: 1458px;top: 20px;" type="submit" class="search-btn"></button>
             </form>
 
-            
+
             @{
                 //
                 //需要获取用户ID
@@ -77,23 +90,27 @@
                 {
 
                     <a style="position: absolute;left: 1520px;top: 12px;" asp-controller="Login" asp-action="Welcome">
-                        <div class="avatarBox">
-                            <img src="~/image/avatar/null.png" class="avatar" />
-                        </div>
+                        <img src="~/image/avatar/null.png" class="avatar" />
                     </a>
 
                 }
                 //当用户已经登录
                 else
                 {
-                    <a style="position: absolute;left: 1520px;top: 12px;" asp-controller="PersonInfo" asp-action="Index" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value">
-                        <div class="avatarBox">
+                    if (User.IsInRole("Admin"))
+                    {
+                        <a style="position: absolute;left: 1520px;top: 12px;" asp-controller="PersonInfo" asp-action="AdminView" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value">
                             <img src="~/image/avatar/@User.Claims.SingleOrDefault(sa => sa.Type == "Avatar").Value" class="avatar" />
-                        </div>
+                        </a>
+                    }
+                    else
+                    {
+                    <a style="position: absolute;left: 1520px;top: 12px;" asp-controller="PersonInfo" asp-action="Index" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value">
+                        <img src="~/image/avatar/@User.Claims.SingleOrDefault(sa => sa.Type == "Avatar").Value" class="avatar" />
                     </a>
-
+                    }
                     <a asp-controller="Login" asp-action="Welcome">
-                        <img src="~/image/Header/SignOut.png" style="position:absolute; top:20px; left:1570px"/>
+                        <img src="~/image/Header/SignOut.png" style="position:absolute; top:20px; left:1570px" />
                     </a>
 
                 }

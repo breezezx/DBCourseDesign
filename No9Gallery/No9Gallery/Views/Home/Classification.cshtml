@@ -5,11 +5,13 @@
 <html>
 <head>
     <link rel="stylesheet" href="~/css/MainPage/MainPage.css" />
+    <style>
 
+    </style>
 </head>
 
 <body>
-<div style="position:absolute;top:60px;left:300px;">
+<div style="position:absolute;top:60px;left:300px;box-shadow: 0 2px 4px rgba(0, 0, 0, 0.10);border-radius: 8px;">
     <img src="~/image/Classification/banner.png">
 </div>
 
@@ -72,7 +74,7 @@
             <a asp-controller="PictureInfo" asp-action="Index" asp-route-id="">
                 <img src="~/image/MainPage/Card.png" class="WorkCard" style="position:absolute; top:@(topp)px; left: @(leftt)px">
                 <img src="~/image/works/@(ViewBag.imagelist[i].picture)" style="position:absolute; top:@(topp)px; left: @(leftt)px" class="Works" alt="image wrong">
-                <span class="WorkName" style="position:absolute; top:@(topp + 200)px; left: @(leftt + 16)px">@ViewBag.imagelist[i].headline</span>
+                <span class="WorkName" style="position:absolute; top:@(topp + 200)px; left: @(leftt + 15)px">@ViewBag.imagelist[i].headline</span>
             </a>
             i++;
             leftt += 268;

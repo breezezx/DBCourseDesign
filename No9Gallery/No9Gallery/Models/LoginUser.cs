@@ -12,6 +12,6 @@ namespace No9Gallery.Models
         public string Password { get; set; }
         public string Status { get; set; }
         public string Avatar { get; set; }
-        
+
     }
 }

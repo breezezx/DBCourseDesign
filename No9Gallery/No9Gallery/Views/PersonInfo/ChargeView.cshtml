@@ -1,0 +1,77 @@
+﻿
+@model IEnumerable<No9Gallery.Models.Chargelist>
+@{
+    ViewData["Title"] = "Charge";
+}
+
+<style>
+
+
+    .YourPoints {
+        font-size: 96px;
+        color: #009CFF;
+        font-weight: 600;
+        background-color: rgba(0, 0, 0, 0);
+    }
+    .pointRecords{
+        color:#009CFF;
+        font-size: 24px;
+        font-weight:600;
+    }
+</style>
+
+
+<img src="~/image/PersonView/Recharge.png" alt="recharge背景图" style="position:absolute; top: 60px; left:300px" />
+<span style="position:absolute; left:540px; top: 110px;" class="YourPoints"> @ViewData["Points"] </span>
+
+
+
+<div class="Charge-box-body">
+    <form name=form1 onsubmit='return check()' asp-controller="PersonInfo" asp-action="Chargesubmit" asp-route-id="@ViewData["ID"]" method="post">
+        <div class="form-group has-feedback">
+            <input type="text" name="ChargeAmount" class="form-control" placeholder="Amount" style="position:absolute; left:300px; top: 390px; width: 240px; height: 40px;" oninput="value=value.replace(/[^\d]/g,'')">
+            <input type="submit" value="Recharge" class="btn btn-primary btn-block btn-flat" style="position:absolute; left:570px; top: 390px; width: 120px; ">
+        </div>
+    </form>
+</div>
+
+<table class="table" style="position:absolute; left:300px; top: 450px; width: 1320px">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.order_no)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.time)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.order_no)
+                </td>
+                <td>
+                    +@Html.DisplayFor(modelItem => item.amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.time)
+                </td>
+
+
+            </tr>
+        }
+    </tbody>
+</table>

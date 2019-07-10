@@ -32,7 +32,7 @@
 }
 <div>
     <span style="position: absolute;left: 795px;top: 622px;" class="Title">No.9 Gallery</span>
-    <span style="position: absolute;left: 632px;top: 708px;" class="Introduction">Lorem ipsum dolor st amet, consectetur adipsicingelit, sed do eiusmod tempor incididunt</span>
+    <span style="position: absolute;left: 632px;top: 708px;" class="No9Introduction">Lorem ipsum dolor st amet, consectetur adipsicingelit, sed do eiusmod tempor incididunt</span>
 </div>
 
 @{
@@ -64,7 +64,7 @@
                 <a asp-controller="PictureInfo" asp-action="Index" asp-route-id=@(work.work_ID)>
                     <img src="~/image/MainPage/Card.png" class="WorkCard" style="position:absolute; top:@(topp)px; left: @(leftt)px">
                     <img src="~/image/works/@(work.picture)" style="position:absolute; top:@(topp)px; left: @(leftt)px" class="Works" alt="image wrong" />
-                    <span class="WorkName" style="position:absolute; top:@(topp + 200)px; left: @(leftt + 16)px">@work.headline</span>
+                    <span class="WorkName" style="position:absolute; top:@(topp + 200)px; left: @(leftt + 15)px">@work.headline</span>
                 </a>
                 i++;
                 leftt += 268;

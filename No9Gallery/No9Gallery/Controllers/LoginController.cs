@@ -95,7 +95,7 @@ namespace No9Gallery.Controllers
                             claimIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.ID));
                             claimIdentity.AddClaim(new Claim(ClaimTypes.Name, user.Name));
                             claimIdentity.AddClaim(new Claim("Avatar", "Default.png"));
-                            claimIdentity.AddClaim(new Claim(ClaimTypes.Role, "Common"));
+                            claimIdentity.AddClaim(new Claim(ClaimTypes.Role, "Commom"));
 
                             var claimsPrincipal = new ClaimsPrincipal(claimIdentity);
                             await HttpContext.SignInAsync(claimsPrincipal);
@@ -113,6 +113,7 @@ namespace No9Gallery.Controllers
 
         public IActionResult SignOut()
         {
+            
             HttpContext.SignOutAsync();
             return RedirectToAction("Welcome", "Login");
         }

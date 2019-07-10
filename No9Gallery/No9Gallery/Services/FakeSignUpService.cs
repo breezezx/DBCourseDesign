@@ -53,7 +53,7 @@ namespace No9Gallery.Services
                             "'" + signUpUser.ID + "'" + "," +
                             "'" + signUpUser.Name + "'" + "," +
                             "'" + signUpUser.Password + "'" + "," +
-                            "'Common'" + "," +
+                            "'Commom'" + "," +
                             "'Default.png'" + ")";
 
 
@@ -63,7 +63,7 @@ namespace No9Gallery.Services
                             "'" + signUpUser.ID + "'" + "," +
                             "'" + "No Introduction" + "'" + "," +
                             + 0 + "," +
-                            + 0 + ")";
+                            + 2000 + ")";
 
                         await cmd.ExecuteNonQueryAsync();
 

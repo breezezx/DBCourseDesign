@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "UpgradeLevel";
+}
+
+<style>
+
+    .level {
+        color: deeppink;
+        font-size: 96px;
+        font-weight: 500;
+        font-family: 'Google Sans';
+        background-color: rgba(0,0,0,0);
+    }
+</style>
+
+<!--显示当前等级-->
+<div>
+    <img src="~/Image/PersonView/Membership.png" style="position:absolute; left:300px; top:60px"/>
+    <span style="position: absolute; top: 120px; left: 540px;" class="level">Lv.@ViewData["MembershipLevel"]</span>
+</div>
+
+<div id="upgrade">
+    <a asp-controller="PersonInfo" asp-action="Upgrade" asp-route-id="@ViewData["ID"]" asp-route-Level="@ViewData["MembershipLevel"]" asp-route-points="@ViewData["Points"]">
+        <img src="~/Image/PersonView/UpgradeButton.png" style="position:absolute; left:300px; top: 330px"/>
+    </a>
+    @if (Convert.ToBoolean(ViewData["Flag"]))
+    {
+        if (Convert.ToBoolean(@ViewData["result"]))
+        {
+            <div class="text-danger" style="position:absolute; left:300px; top: 390px">
+                Success!
+            </div>
+        }
+        else
+        {
+            <div class="text-danger" style="position:absolute; left:300px; top: 390px">
+                积分余额不足!
+            </div>
+        }
+    }
+
+
+</div>
+
+
+@section Scripts{
+    <script src="~/lib/vue/vue.js"></script>
+    <script src="~/lib/axios/axios.js"></script>
+    <script src="~/js/UpgradeLevelComponent.js"></script>
+}

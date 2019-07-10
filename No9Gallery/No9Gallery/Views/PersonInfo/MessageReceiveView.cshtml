@@ -1,0 +1,120 @@
+﻿@model IEnumerable<No9Gallery.Models.MessageReceivelist>
+@{
+    ViewData["Title"] = "MessageReceive";
+}
+<style>
+
+    table tbody {
+        display: block;
+        height: 195px;
+        overflow-y: scroll;
+    }
+
+    table thead, tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    table thead {
+        width: calc( 100% - 1em )
+    }
+
+        table thead th {
+            background: #ccc;
+        }
+</style>
+
+<span> 未读信息列表 </span>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.is_read)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            @if (item.is_read == "未读")
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.content)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.is_read)
+                        <form name=@item.message_ID asp-controller="PersonInfo" asp-action="setRead" method="post">
+
+                            <input type="text" name="toSetRead" style="display:none" value=@item.message_ID>
+                            <input type="submit" value="设置为已读">
+
+                        </form>
+                    </td>
+
+
+
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+<span> 已读信息列表 </span>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.is_read)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            @if (item.is_read == "已读")
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.content)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.is_read)
+                    </td>
+
+
+                </tr>
+            }
+        }
+    </tbody>
+</table>

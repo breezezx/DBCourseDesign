@@ -1,14 +1,11 @@
 ﻿.avatar {
-    width: 100%;
-    height: 100%;
-}
-
-.avatarBox {
-    border-radius: 6px;
     width: 36px;
     height: 36px;
-    overflow: hidden;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.10);
 }
+
 
 .Logo {
     font-weight: 600;
@@ -25,9 +22,9 @@
 }
 
 .search-btn {
-    height: 25px;
-    width: 25px;
-    top: 15px;
+    height: 20px;
+    width: 20px;
+    top: 20px;
     background: url("../../image/Header/SearchIcon.png");
     border: none;
     outline: none;

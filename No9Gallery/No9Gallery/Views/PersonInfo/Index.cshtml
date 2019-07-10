@@ -1,0 +1,144 @@
+﻿@{
+    ViewData["Title"] = "PersonInfo";
+}
+
+<style>
+
+
+    .bigPicture {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+        border-radius: 6px;
+    }
+    .bigAvatar {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+        border-radius: 6px;
+    }
+
+    .nameInPersonInfo {
+        font-size: 32px;
+        font-weight: 600;
+    }
+
+    .userIntroduction {
+        font-size: 16px;
+        opacity: 0.8;
+        width: 1080px;
+    }
+
+    .buttomNum {
+        color: #FFFFFF;
+        background-color: rgba(0, 0, 0, 0);
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .WorkCard {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.10);
+        border-radius: 4px;
+    }
+
+    .Works {
+        width: 248px;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    .WorkName {
+        font-size: 16px;
+        font-weight: 400;
+        background-color: #FFFFFF;
+    }
+</style>
+
+<div style="border-radius: 6px;">
+    <img src="~/image/PersonView/PersonInfoPicture.png" class="bigPicture" style="position:absolute; left:300px; top:60px;"/>
+</div>
+
+<!--头像-->
+<div style="position:absolute;left: 330px; top: 300px;">
+    <img src="~/image/avatar/@ViewData["HeadportraitURL"]" class="bigAvatar"/>
+</div>
+
+<img src="~/image/PersonView/Line.png" style="position:absolute; left:480px; top:430px;">
+
+
+<!--用户名和简介-->
+<div>
+    <span class="nameInPersonInfo" style="position:absolute; left: 480px; top: 375px;">@ViewData["Name"]</span>
+    <span class="userIntroduction" style="position:absolute; left: 480px; top: 440px;">@ViewData["Introduction"]</span>
+</div>
+
+<!--upload按钮,level按钮,coins按钮-->
+<div>
+    @if (ViewData["VisitID"].ToString() == ViewData["ID"].ToString())
+    {
+        <a asp-controller="PersonInfo" asp-action="UploadView" asp-route-id="@ViewData["ID"]">
+            <img src="~/image/PersonView/UploadButton.png" style="position:absolute; left: 1265px; top: 384px" />
+        </a>
+        <a asp-controller="PersonInfo" asp-action="UpgradeView" asp-route-id="@ViewData["ID"]" asp-route-flag="false" asp-route-result="false">
+            <img src="~/image/PersonView/LevelBackground.png" style="position:absolute; left: 1400px; top: 384px" />
+            <span class="buttomNum" style="position: absolute; top: 392px; left: 1442px;">Lv.@ViewData["MembershipLevel"]</span>
+        </a>
+        <a asp-controller="PersonInfo" asp-action="ChargeView" asp-route-id="@ViewData["ID"]">
+            <img src="~/image/PersonView/CoinsBackground.png" style="position:absolute; left: 1500px; top: 384px" />
+            <span class="buttomNum" style="position: absolute; top: 392px; left: 1538px;">@ViewData["Integral"]</span>
+        </a>
+    }
+    else
+    {
+        <img src="~/image/PersonView/LevelBackground.png" style="position:absolute; left: 1400px; top: 384px" />
+        <span class="buttomNum" style="position: absolute; top: 392px; left: 1442px;">Lv.@ViewData["MembershipLevel"]</span>
+        <img src="~/image/PersonView/CoinsBackground.png" style="position:absolute; left: 1500px; top: 384px" />
+        <span class="buttomNum" style="position: absolute; top: 392px; left: 1538px;">@ViewData["Integral"]</span>
+    }
+</div>
+<!--edit按钮\follow按钮\followed按钮-->
+<div style="position:absolute; left: 330px; top: 435px;">
+    @if (ViewData["VisitID"].ToString() == ViewData["ID"].ToString())
+    {
+        <a asp-controller="PersonInfo" asp-action="ReviseView" asp-route-id="@ViewData["ID"]"><img src="~/image/PersonView/EditButton.png" /></a>
+    }
+    else
+    {
+        if ((bool)ViewData["IsFollwed"])
+        {
+            <a asp-controller="PersonInfo" asp-action="Follow" asp-route-id="@ViewData["ID"]"><img src="~/image/PersonView/FollowedButton.png" /></a>
+        }
+        else
+        {
+            <a asp-controller="PersonInfo" asp-action="Follow" asp-route-id="@ViewData["ID"]"><img src="~/image/PersonView/FollowButton.png" /></a>
+        }
+    }
+</div>
+
+<div>
+    @{
+        int topp = 540;
+        int leftt = 300;
+        int i = 0;
+        int cur = 0;
+        foreach (var work in (List<string>)ViewData["Workpaths"])
+        {
+            <a asp-controller="PictureInfo" asp-action="Index" asp-route-id="@( ((List<string>)ViewData["Workids"])[i] )">
+                <div style="border-radius: 4px;">
+                    <img src="~/image/MainPage/Card.png" class="WorkCard" style="position:absolute; top:@(topp)px; left: @(leftt)px">
+                    <img src="~/image/works/@( ((List<string>)ViewData["Workpaths"])[i] )" style="position:absolute; top:@(topp)px; left: @(leftt)px" class="Works" alt="image wrong">
+                </div>
+                <span class="WorkName" style="position:absolute; top:@(topp + 200)px; left: @(leftt + 15)px"> @(((List<string>)ViewData["WorkHeadline"])[i]) </span>
+            </a>
+            i++;
+            leftt += 268;
+            if (i % 5 == 0)
+            {
+                topp += 260;
+                leftt = 300;
+            }
+        }
+    }
+</div>
+
+

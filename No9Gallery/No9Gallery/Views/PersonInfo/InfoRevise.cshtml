@@ -1,0 +1,87 @@
+﻿
+@{
+    ViewData["Title"] = "PersonalRevise";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>个人信息修改</title>
+
+    <style type="text/css">
+        .newInfo {
+            font-size: 40px;
+            font-weight: 600;
+        }
+        .subTitle{
+            font-size: 16px;
+            color: #009cFF;
+        }
+
+    </style>
+
+
+</head>
+<body>
+    <div class="newInfo" style="position:absolute; top:120px; left:360px">
+        <span>New Info</span>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" asp-controller="PersonInfo" asp-action="UploadAvatorAsync">
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="file" id="files" name="files" accept="image/*" style="position:absolute; top:210px; left:360px; width: 240px; height:40px">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="submit" value="Upload" style="position:absolute; top:210px; left:720px; width: 120px" class="btn btn-primary btn-block btn-flat">
+            </div>
+        </div>
+    </form>
+
+    <form name=form1 onsubmit='return check()' asp-controller="PersonInfo" asp-action="Revise" method="post">
+        <span class="subTitle" style="position:absolute; top:300px; left:360px; width: 480px">New Name</span>
+        <input type="text" name="NewUserName" style="position:absolute; top:330px; left:360px; width: 480px;" class="form-control" placeholder="New Name" value=@ViewData["Name"] required oninvalid="setCustomValidity('请输入用户名')" oninput="setCustomValidity('')">
+
+        <span class="subTitle" style="position:absolute; top:390px; left:360px; width: 480px">New Password</span>
+        <input type="password" name="NewPassword" style="position:absolute; top:420px; left:360px; width: 480px;" class="form-control" placeholder="New Password" value=@ViewData["Password"] required>
+
+        <span class="subTitle" style="position:absolute; top:480px; left:360px; width: 480px">ConfirmPassword</span>
+        <input type="password" name="ConfirmPassword" style="position:absolute; top:510px; left:360px; width: 480px;" class="form-control" placeholder="ConfirmPassword" value=@ViewData["Password"] required>
+
+        <span class="subTitle" style="position:absolute; top:570px; left:360px; width: 480px">New Introduction</span>
+        <textarea rows="2" cols="10" name="NewIntroduction" style="position:absolute; top:600px; left:360px; width: 480px; height:150px;" class="form-control" placeholder="New Introduction" Maxlength=150>@ViewData["Introduction"]</textarea>
+
+        <input type="submit" value="Submit" style="position:absolute; top:780px; left:360px; width: 120px" class="btn btn-primary btn-block btn-flat">
+    </form>
+
+
+    <script language='javascript'>
+        function check() {
+            var str = form1.NewPassword.value;
+            var SPECIAL_STR = "'~!%^&*();'\'?><[]{}\\|,:/=+—“”‘'";
+            for (i = 0; i < str.length; i++)
+                if (SPECIAL_STR.indexOf(str.charAt(i)) != -1) {
+                    alert('客户名不能以含有非法字符(' + str.charAt(i) + ')！');
+                    form1.NewPassword.focus();
+                    return false;
+                }
+
+            var str2 = form1.ConfirmPassword.value;
+            if (str != str2) {
+                alert('确认密码与原密码不一致');
+                form1.ConfirmPassword.focus;
+                return false;
+            }
+
+
+            return true;
+        }
+    </script>
+
+
+</body>
+
+
+</html>
