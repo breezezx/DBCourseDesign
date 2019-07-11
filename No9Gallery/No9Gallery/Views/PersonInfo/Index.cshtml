@@ -83,7 +83,7 @@
             <img src="~/image/PersonView/LevelBackground.png" style="position:absolute; left: 1400px; top: 384px" />
             <span class="buttomNum" style="position: absolute; top: 392px; left: 1442px;">Lv.@ViewData["MembershipLevel"]</span>
         </a>
-        <a asp-controller="PersonInfo" asp-action="ChargeView" asp-route-id="@ViewData["ID"]">
+        <a asp-controller="PersonInfo" asp-action="ChargeView" asp-route-id="@ViewData["ID"]" asp-route-flag="false" asp-route-result="false">
             <img src="~/image/PersonView/CoinsBackground.png" style="position:absolute; left: 1500px; top: 384px" />
             <span class="buttomNum" style="position: absolute; top: 392px; left: 1538px;">@ViewData["Integral"]</span>
         </a>
@@ -121,6 +121,7 @@
         int leftt = 300;
         int i = 0;
         int cur = 0;
+        <img src="~/image/footimg.png" style="position:absolute; left:@(leftt)px; top: @(topp + 240)px">
         foreach (var work in (List<string>)ViewData["Workpaths"])
         {
             <a asp-controller="PictureInfo" asp-action="Index" asp-route-id="@( ((List<string>)ViewData["Workids"])[i] )">
@@ -137,6 +138,7 @@
                 topp += 260;
                 leftt = 300;
             }
+            <img src="~/image/footimg.png" style="position:absolute; left:@(leftt)px; top: @(topp + 240)px">
         }
     }
 </div>

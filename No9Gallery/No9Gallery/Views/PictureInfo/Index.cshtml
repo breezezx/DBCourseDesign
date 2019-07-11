@@ -1,209 +1,270 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@{ 
+    @using System.Security.Claims;
+}
+
+@model Comments
+
 <head>
     <title>作品界面</title>
     <link rel="stylesheet" href="./css/work_style.css" />
+
+    <style>
+        body{
+            
+        }
+        .backCard {
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+        }
+        .showWork {
+            width: 960px;
+            height: 720px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+
+        }
+        .workHeadline{
+            font-weight:600;
+            font-size: 36px;
+
+        }
+        .workIntroduction{
+            font-size: 16px;
+            opacity: 0.75;
+        }
+        .authorAvatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 13px;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
+        }
+        .authorName{
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .buttomWords {
+            font-size: 14px;
+            font-weight: 600;
+            color:#FFFFFF
+        }
+        .commentAvatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
+        }
+        .commentName {
+            font-size: 14px;
+            opacity: 0.6;
+        }
+        .commentWords{
+            font-size: 18px;
+        }
+    </style>
 </head>
-<body>
-    <div class="container" style="width:960px">
-        <div class="row">
-            <div id="show_photo" style="position:absolute;left:480px;top:60px;width:960px;height:720px;">
-                <img :src="work_photo" style="width:100%; height:100%" />
-            </div>
+
+<body style="background-image:url('../../wwwroot/image/works/@ViewData["picture"]' }); background-size: cover;">
+    <img src="~/image/work_res/BackCard.png" style="position:absolute; top:720px; left:480px" class="backCard">
+
+    <div id="show_photo" style="position:absolute;left:480px;top:60px;">
+        <img :src="work_photo" class="showWork" />
+    </div>
 
 
-            <div class="textcontainer" style="width:960px;">
+    <div style="width:960px;">
 
-                <div id="header" style="width:960px;">
 
-                    @*<img src="/image/work_res/Animation.png" alt="label" style="position:absolute;left:1260px;top:800px" />*@
-                    <img src="/image/work_res/complain.png" onclick="complain()" alt="投诉" id="complain" style="position:absolute;left:1380px;top:810px" />
-                </div>
-                <div id="headline-component" style="position:absolute;left:480px;top:810px">
-                    {{ works.headline }}
-                </div>
+        <div id="headline-component" style="position:absolute;left:540px;top:814px" class="workHeadline">
+            {{ works.headline }}
+        </div>
 
-                <div id="introduction-component" style="position:absolute;left:480px;top:840px">
-                    {{ works.introduction }}
-                </div>
+        <div id="introduction-component" style="position:absolute;left:540px;top:875px" class="workIntroduction">
+            {{ works.introduction }}
+        </div>
 
-                <div id="label_component" style="position:absolute;left:1260px;top:800px" align="right">
 
-                    <div v-for="p in label">
-                        <div v-if="p==='Animation'">
+        @{
+            int i = 0;
 
-                            <img src="/image/work_res/Animation.png" alt="{{p}}" />
+            <div id="label_component">
 
-                        </div>
-                        <div v-else-if="p==='Illustration' ">
-                            <a :href="turnurl">
-                                <img src="/image/work_res/Illustration.png" alt="{{p}}" />
-                            </a>
-                        </div>
-                        <div v-else-if="p==='Painting' ">
-                            <a :href="turnurl">
-                                <img src="/image/work_res/Painting.png" alt="{{p}}" />
-                            </a>
-                        </div>
-                        <div v-else-if="p==='Photograph' ">
-                            <a :href="turnurl">
-                                <img src="/image/work_res/Photograph.png" alt="{{p}}" />
-                            </a>
-                        </div>
-                        <div v-else-if="p==='UI_Design' ">
-                            <a :href="turnurl">
-                                <img src="/image/work_res/UI_Design.png" alt="{{p}}" />
-                            </a>
-                        </div>
+                <div v-for="p in label">
+                    <div v-if="p==='Animation'" style="position:absolute;left:@(1268 - i * 132)px;top:822px">
+
+                        <img src="/image/work_res/Animation.png" alt="{{p}}" />
+
                     </div>
-
-
+                    <div v-else-if="p==='Illustration' " style="position:absolute;left:@(1268 - i * 132)px;top:822px">
+                        <a :href="turnurl">
+                            <img src="/image/work_res/Illustration.png" alt="{{p}}" />
+                        </a>
+                    </div>
+                    <div v-else-if="p==='Painting' " style="position:absolute;left:@(1268 - i * 132)px;top:822px">
+                        <a :href="turnurl">
+                            <img src="/image/work_res/Painting.png" alt="{{p}}" />
+                        </a>
+                    </div>
+                    <div v-else-if="p==='Photograph' " style="position:absolute;left:@(1268 - i * 132)px;top:822px">
+                        <a :href="turnurl">
+                            <img src="/image/work_res/Photograph.png" alt="{{p}}" />
+                        </a>
+                    </div>
+                    <div v-else-if="p==='UI_Design' " style="position:absolute;left:@(1268 - i * 132)px;top:822px">
+                        <a :href="turnurl">
+                            <img src="/image/work_res/UI_Design.png" alt="{{p}}" />
+                        </a>
+                    </div>
                 </div>
 
 
+            </div>
+        }
 
-                <div id="follow-component" style="position:absolute;left:490px;top:940px">
-                    <img :src="follow_photo" v-on:click="follow()" alt="follow" id="follow" />
-                </div>
 
-                <div id="avatar_component" style="position:absolute;left:480px;top:940px">
-                    <a target="_blank" href="//weibo.com/">
-                        <img alt="新用户" :src="head_photo" style="width:50%; height:50%" />
-                    </a>
+        @{ 
+            if(User.Identity.IsAuthenticated && (User.IsInRole("Admin") || (string)ViewData["workuser_ID"] == User.FindFirstValue(ClaimTypes.NameIdentifier)))
+            {
+                <a asp-action="DeleteWork">
+                    <img src="~/image/work_res/deleteButtom.png" style="position:absolute; left:510px; top: 830px"/>
+                </a>
+            }
+        }
+
+
+        @{
+            if (!User.Identity.IsAuthenticated)
+            {
+                <a asp-action="Welcome" asp-controller="Login">
+                    <img src="/image/work_res/complain.png" style="position:absolute; top: 832px; left: 1400px" />
+                </a>
+            }
+            else if (!(User.IsInRole("Admin") || (string)ViewData["workuser_ID"] == User.FindFirstValue(ClaimTypes.NameIdentifier)))
+            {
+                <div id="report-component">
+                    <img src="/image/work_res/complain.png" v-on:click="addReport" alt="complain" id="complain" style="position:absolute; top: 832px; left: 1400px" />
                 </div>
-                <div id="user-component" style="position:absolute;left:615px;top:945px">
+            }
+
+        }
+
+        @{
+            if (User.Identity.IsAuthenticated && (string)ViewData["workuser_ID"] == User.FindFirstValue(ClaimTypes.NameIdentifier))
+            {
+                <div id="user-component" style="position:absolute;left:585px;top:949px" class="authorName">
                     {{ works.user_name}}
                 </div>
-
-                <div id="likes_component">
-                    <img :src="likes_photo" v-on:click="addLikes" style="position:absolute;left:1100px;top:940px" />
-                    <div v-for="u in works" style="position:absolute;left:1140px;top:940px">
-                        <label v-model="likes">{{ likes }}</label>
+            }
+            else
+            {
+                <div id="follow-component" style="position:absolute;left:540px;top:942px">
+                    <div v-if="is_login === false">
+                        <a asp-action="Welcome" asp-controller="Login">
+                            <img src="/image/work_res/follow.png" />
+                        </a>
+                    </div>
+                    <div v-else>
+                        <img :src="follow_photo" v-on:click="follow" alt="follow" id="follow" />
                     </div>
                 </div>
 
-                <div id="collect-component">
-                    <img :src="collect_photo" v-on:click="addCollect" style="position:absolute;left:1200px;top:940px" />
-                    <div v-for="u in works" style="position:absolute;left:1240px;top:940px">
-                        <label v-model="collect">{{ collect }}</label>
-</div>
+                <div id="user-component" style="position:absolute;left:675px;top:949px" class="authorName">
+                    {{ works.user_name}}
                 </div>
+            }
+        }
 
-                <div id="download-component">
-                    <img src="/image/work_res/download.png" v-on:click="ifEnoughPoint" alt="download" id="download" style="position:absolute;left:1300px;top:940px" />
-                </div>
-
-                <div id="point-component">
-                    <div style="position:absolute;left:1345px;top:940px">
-                        <div v-for="u in works">
-                            {{ u.points_need }}
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <div id="footer" style="width:960px;">
-                    @*<img src="/image/work_res/follow.png" onclick="followChangeImg()" alt="关注" id="follow" style="position:absolute;left:490px;top:940px" />
-                    <img src="/image/work_res/avatar.png" alt="作者头像" style="position:absolute;left:480px;top:940px" />
-                    <img src="/image/work_res/like.png" onclick="likeChangeImg()" alt="点赞" id="like" style="position:absolute;left:1100px;top:940px" />
-                    <img src="/image/work_res/collect.png" onclick="collectChangeImg()" alt="收藏" id="collect" style="position:absolute;left:1200px;top:940px" />
-                    <img src="/image/work_res/download.png" onclick="download()" alt="下载" id="download" style="position:absolute;left:1300px;top:940px" />*@
-
-                    @*<span style="position:absolute;left:1140px;top:945px">num</span>
-                    <span style="position:absolute;left:1240px;top:945px">num</span>
-                    <span style="position:absolute;left:1345px;top:945px">point</span>*@
-                </div>
-
-            </div>
-        </div>
-        <div id="user_head" style="position:absolute;left:480px;top:1020px">
-
-            <textarea class="W_input" style="overflow:hidden;height:23px;width:800px;resize:none;"></textarea>
-            <button class="btn btn-primary">评论</button>
-        </div>
-        @*<div class="comment_list" style="position:absolute;left:480px;top:1100px">
-            <a target="_blank" href="//weibo.com/">
-                <img alt="欢迎新用户" src="./image/work_res/head_portrait.png" />
+        <div id="avatar_component" style="position:absolute;left:545px;top:947px;" class="authorAvatar">
+            <a asp-controller="PersonInfo" asp-action="Index" asp-route-id="@ViewData["workuser_ID"]">
+                <img alt="新用户" :src="head_photo" style="width:100%; height:100%" class="authorAvatar" />
             </a>
-            <a class="comment" target="_blank" href="//weiboooo.com/">
-                bbbbbb
-            </a>
-            <br>
-            <span class="comment">
-                sadjgkasjgd
-            </span>
-        </div>*@
-
-
-        <div id="comment_pjjjjublish" style="position:absolute;left:480px;top:1020px">
-            <form asp-controller="PictureInfo" asp-action="AddComment">
-                <input type="text" style="overflow:hidden;height:23px;width:800px;" name="words" />
-                <input type="submit" style="position:absolute;width:100px;left:810px;top:0px" value="评论" />
-            </form>
         </div>
 
 
 
-
-
-
-
-        <div id="comment_list_component" style="position:absolute;left:480px;top:1100px">
-            <div v-for="c in comments">
-                <a target="_blank" href="//weibo.com/">
-                    <img alt="新用户" src="/image/work_res/head_portrait.png" />
+        <div id="likes_component">
+            <div v-if="is_login === false">
+                <a asp-action="Welcome" asp-controller="Login">
+                    <img src="/image/work_res/like.png" style="position:absolute;left:1060px;top:942px" />
                 </a>
-                <a class="comment" target="_blank" href="//weiboooo.com/">
-                    {{c.user_ID}}-{{c.work_ID}}-  {{c.user_name}}
-                </a>
-                <br>content<br>
-                <span class="content">
-                    {{c.content}}
-                </span>
-                @*<button class="btn btn-primary btn-block" v-on:click="refreshData">REFRESH</button>*@
-            </div>
-        </div>
-
-
-
-        <div id="subscriber-list-component" style="position:absolute;left:480px;top:1600px">
-            <h3>WayKurat Subscribers </h3>
-            <div v-if="isViewReady == true">
-                <ol>
-                    <li v-for="c in subscribers">
-                        {{c.likes_num}}
-                    </li>
-
-                </ol>
-                <button class="btn btn-primary btn-block" v-on:click="refreshData">REFRESH</button>
             </div>
             <div v-else>
-                <div>Loading data...</div>
+                <img :src="likes_photo" v-on:click="addLikes" style="position:absolute;left:1060px;top:942px" />
+            </div>
+            <div v-for="u in works">
+                <label v-model="likes" style="position: absolute; left:1103px; top:950px; color:#FF21AD" class="buttomWords" id="likenum">{{ likes }}</label>
             </div>
         </div>
+
+        <div id="collect-component">
+            <div v-if="is_login === false">
+                <a asp-action="Welcome" asp-controller="Login">
+                    <img src="/image/work_res/collect.png" style="position:absolute;left:1160px;top:942px" />
+                </a>
+            </div>
+            <div v-else>
+                <img :src="collect_photo" v-on:click="addCollect" style="position:absolute;left:1160px;top:942px" />
+            </div>
+            <div v-for="u in works">
+                <label v-model="collect" style="position:absolute;left:1203px;top:950px;color:#FFB000" class="buttomWords" id="collectnum">{{ collect }}</label>
+            </div>
+        </div>
+
+        <div id="download-component">
+            <div v-if="is_login === false">
+                <a asp-action="Welcome" asp-controller="Login">
+                    <img src="~/image/work_res/download.png" style="position:absolute;left:1260px;top:942px" />
+                </a>
+            </div>
+            <div v-else>
+                <img src="/image/work_res/download.png" v-on:click="ifEnoughPoint" style="position:absolute;left:1260px;top:942px" />
+            </div>
+
+        </div>
+
+        <div id="point-component">
+            <div style="position:absolute;left:1315px;top:950px">
+                <div v-for="u in works" class="buttomWords">
+                    {{ u.points_need }}
+                </div>
+            </div>
+        </div>
+
     </div>
-    <script>
-        function followChangeImg() {
-            var obj = document.getElementById("follow")
-            obj.setAttribute("src", "../../image/work_res/followed.png")
+
+    <div>
+        <form asp-action="AddComment">
+            <input asp-for="addComment" type="text" style="position:absolute; top:1092px; left:540px; width: 730px; height: 36px" class="form-control" placeholder="Comment here .." Maxlength=150 required oninvalid="setCustomValidity('Please Input comment')" oninput="setCustomValidity('')">
+            <input type="submit" value="Submit" class="btn btn-primary btn-block btn-flat" style="position:absolute; left:1290px; top: 1092px; width: 90px; height: 36px">
+        </form>
+    </div>
+
+
+    @{
+        int topp = 1170;
+        int leftt = 540;
+        <img src="~/image/footimg.png" style="position:absolute; left:@(leftt)px; top: @(topp)px">
+        foreach (var item in Model.comments)
+        {
+            <a asp-action="Index" asp-controller="PersonInfo" asp-route-id="@item.commenterid">
+                <img src="~/image/avatar/@item.avatar" class="commentAvatar" style="position:absolute; left:@(leftt)px; top: @(topp)px">
+                <span class="commentName" style="position:absolute; left:@(leftt+60)px; top: @(topp)px">@item.name</span>
+            </a>
+            <span class="commentWords" style="position:absolute; left:@(leftt+60)px; top: @(topp+30)px">@item.words</span>
+            <img src="~/image/work_res/commentLine.png" style="position:absolute; left:@(leftt+60)px; top: @(topp+60)px">
+            <img src="~/image/footimg.png" style="position:absolute; left:@(leftt)px; top: @(topp)px">
+            topp += 120;
         }
-        function likeChangeImg() {
-            var obj = document.getElementById("like")
-            obj.setAttribute("src", "../../image/work_res/liked.png")
-        }
-        function collectChangeImg() {
-            var obj = document.getElementById("collect")
-            obj.setAttribute("src", "../../image/work_res/collected.png")
-        }
-        function download() {
-            alert("you have downloaded the work successfully!")
-        }
-        function complain() {
-            alert("you have complained the work successfully!")
-        }
-    </script>
+    }
+
+
+
+
+
+
 </body>
 
 @section Scripts{

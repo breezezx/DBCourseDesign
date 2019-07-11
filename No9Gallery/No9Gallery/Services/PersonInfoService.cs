@@ -288,7 +288,7 @@ namespace No9Gallery.Services
        public Task<string> ChargeSubmit(string order_no, string id, int amount, string ConTent, string chargetime,int points)
         {
 
-            int result = 0;
+           
             using (OracleConnection con = new OracleConnection(ConString.conString))
             {
 
@@ -301,9 +301,9 @@ namespace No9Gallery.Services
                         cmd.CommandText = "UPDATE COMMON_USER SET POINTS = '" + points + "' WHERE USER_ID = '" + id + "'";
                         cmd.ExecuteNonQuery();
                         cmd.CommandText = "INSERT INTO POINT_RECORD VALUES ('" + order_no + "','" + id + "'," +amount+",'"+ConTent+"',to_date ( '"+chargetime+"','YYYY-MM-DD HH24:MI:SS' ))";
-                        var text= cmd.CommandText;
+                        
                         cmd.ExecuteNonQuery();
-                        //INSERT INTO  FLOOR VALUES(to_date ( '2007-12-20 18:31:34' , 'YYYY-MM-DD HH24:MI:SS' ) ) ;
+                      
                         con.Close();
 
                     }
@@ -311,10 +311,11 @@ namespace No9Gallery.Services
                     {
                         string e = ex.Message;
                         int i = 0;
-                        return null;
+                      
+                        return Task.FromResult("false");
                     }
 
-                    return Task.FromResult("Succed");
+                    return Task.FromResult("true");
 
                 }
 
@@ -367,10 +368,26 @@ namespace No9Gallery.Services
 
             return Task.FromResult("Succed");
         }
-
+        public string Work_Type(int typeid)
+        {
+            switch(typeid)
+            {
+                case 1:
+                    return "Painting";
+                case 2:
+                    return "Photograph";
+                case 3:
+                    return "Animation";
+                case 4:
+                    return "UI Design";
+                case 5:
+                    return "Illustration";
+            }
+            return "painting";
+        }
 
         //上传作品
-        public async Task<string> UploadWork(string Userid,IFormFile file, string Workname,string  WorkType,string  Introduction)
+        public async Task<string> UploadWork(string Userid,IFormFile file, string Workname,string  WorkType,string  Introduction,int NewWorkPoint)
         {
 
            
@@ -381,9 +398,7 @@ namespace No9Gallery.Services
             var randomnum = new Random();           
             var fileid = DateTime.Now.ToString("yyyyMMddHHmmss")+randomnum.Next(0,1000).ToString();
             //生成上传时间
-            var uploadtime= DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            //生成下载所需积分
-            int poitsneed = 200;
+            var uploadtime= DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");          
             //生成文件路径
             var filefolder = "/image/works/";
             string workpath =fileid+ Path.GetExtension(file.FileName);
@@ -404,10 +419,10 @@ namespace No9Gallery.Services
                     {
                         con.Open();
                         cmd.BindByName = true;
-                        cmd.CommandText = "INSERT INTO WORK VALUES('" + fileid + "','" + Userid + "','" + Workname + "','" + Introduction + "','" + workpath + "'," + 0 + "," + 0 + ",to_date ('" + uploadtime + "','YYYY-MM-DD HH24:MI:SS')," + poitsneed + ")";
+                        cmd.CommandText = "INSERT INTO WORK VALUES('" + fileid + "','" + Userid + "','" + Workname + "','" + Introduction + "','" + workpath + "'," + 0 + "," + 0 + ",to_date ('" + uploadtime + "','YYYY-MM-DD HH24:MI:SS')," + NewWorkPoint + ")";
                         // cmd.CommandText = "INSERT INTO POINT_RECORD VALUES ('" + order_no + "','" + id + "'," + amount + ",'" + ConTent + "',to_date ( '" + chargetime + "','YYYY-MM-DD HH24:MI:SS' ))";
-                        cmd.ExecuteNonQuery();
-                        cmd.CommandText = "INSERT INTO WORK_TYPE VALUES('" + WorkType + "','" + fileid + "')";
+                        cmd.ExecuteNonQuery();                       
+                        cmd.CommandText = "INSERT INTO WORK_TYPE VALUES('" + Work_Type(Convert.ToInt32(WorkType)) + "','" + fileid + "')";
                         cmd.ExecuteNonQuery();
                         con.Close();
 
@@ -430,8 +445,9 @@ namespace No9Gallery.Services
 
 
         //执行升级操作
-        public Task<string> Upgrade(string id,string Level,string Points)
+        public Task<string> Upgrade(string id,string Level,string Points,string order_no,string upgradetime)
         {
+            
             using (OracleConnection con = new OracleConnection(ConString.conString))
             {
 
@@ -441,8 +457,12 @@ namespace No9Gallery.Services
                     {
                         con.Open();
                         cmd.BindByName = true;
-                        cmd.CommandText = "UPDATE COMMON_USER SET MEMBERSHIP_LEVEL = "+(Convert.ToInt32(Level)+1)+",POINTS = "+(Convert.ToInt32(Points)-5000)+"WHERE USER_ID = '"+id+"'";
-                      
+                        //更新个人积分
+                        cmd.CommandText = "UPDATE COMMON_USER SET MEMBERSHIP_LEVEL = "+(Convert.ToInt32(Level)+1)+",POINTS = "+(Convert.ToInt32(Points)-5000)+"WHERE USER_ID = '"+id+"'";                      
+                        cmd.ExecuteNonQuery();
+
+                        //插入新的积分变动记录
+                        cmd.CommandText = "INSERT INTO POINT_RECORD VALUES ('" + order_no + "','" + id + "',5000,'会员升级',to_date ( '" + upgradetime + "','YYYY-MM-DD HH24:MI:SS' ))";
                         cmd.ExecuteNonQuery();
                         con.Close();
                     }
@@ -520,7 +540,7 @@ namespace No9Gallery.Services
 
 
 
-        //管理员发送信息
+        //管理员发送个人消息
        public Task<string> PostMassage(string adminID,string ReceiverID, string Content,string Time)
         {
 
@@ -555,7 +575,41 @@ namespace No9Gallery.Services
            
         }
 
-        //更新信息状态
+        //管理员发送系统消息
+        public Task<string> PostAllMessage(string adminID, string Content, string Time)
+        {
+            string MassageID = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string ReceiverID = "0000000";
+            using (OracleConnection con = new OracleConnection(ConString.conString))
+            {
+
+                using (OracleCommand cmd = con.CreateCommand())
+                {
+                    try
+                    {
+                        con.Open();
+                        cmd.BindByName = true;
+                        cmd.CommandText = "INSERT INTO MESSAGE VALUES('" + MassageID + "','" + adminID + "','" + Content + "',to_date('" + Time + "','YYYY-MM-DD HH24:MI:SS'))";
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = "INSERT INTO RECEIVE VALUES('"+"0000000" +"','" + MassageID + "'," + 0 + ")";
+                        cmd.ExecuteNonQuery();
+                        
+
+                    }
+                    catch (Exception ex)
+                    {
+                        string e = ex.Message;
+                        int i = 0;
+                        return Task.FromResult("Failed");
+                    }
+                    return Task.FromResult("Succeed");
+
+                }
+
+            }
+        }
+
+        //更新报告状态
         public Task<string> ChangeMessage()
         {
 
@@ -598,7 +652,8 @@ namespace No9Gallery.Services
                     {
                         con.Open();
                         cmd.BindByName = true;
-                        cmd.CommandText = "select MESSAGE.MESSAGE_ID,ADMINISTRATOR_ID, IS_READ,TIME,CONTENT FROM RECEIVE,MESSAGE WHERE RECEIVE.MESSAGE_ID=MESSAGE.MESSAGE_ID AND RECEIVE.USER_ID = '"+id+"'";
+                        cmd.CommandText = "(select MESSAGE.MESSAGE_ID,ADMINISTRATOR_ID,IS_READ,TIME,CONTENT FROM RECEIVE, MESSAGE WHERE MESSAGE.MESSAGE_ID=RECEIVE.MESSAGE_ID AND RECEIVE.USER_ID = '" + id+ "')UNION" +
+                            "(SELECT MESSAGE.MESSAGE_ID,ADMINISTRATOR_ID,IS_READ,TIME,CONTENT FROM RECEIVE, MESSAGE WHERE MESSAGE.MESSAGE_ID=RECEIVE.MESSAGE_ID AND RECEIVE.USER_ID ='0000000')";
                         OracleDataAdapter myadapter = new OracleDataAdapter(cmd);
                         DataTable dt = new DataTable();
                         myadapter.Fill(dt);
@@ -641,7 +696,7 @@ namespace No9Gallery.Services
             }
         }
 
-
+        //设置信息为已读状态
         public Task<string> setRead(string msgid)
         {
             using (OracleConnection con = new OracleConnection(ConString.conString))
