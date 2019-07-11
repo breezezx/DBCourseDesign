@@ -13,7 +13,7 @@
     }
 </style>
 
-<!--显示当前等级-->
+
 <div>
     <img src="~/Image/PersonView/Membership.png" style="position:absolute; left:300px; top:60px"/>
     <span style="position: absolute; top: 120px; left: 540px;" class="level">Lv.@ViewData["MembershipLevel"]</span>
@@ -21,30 +21,30 @@
 
 <div id="upgrade">
     <a asp-controller="PersonInfo" asp-action="Upgrade" asp-route-id="@ViewData["ID"]" asp-route-Level="@ViewData["MembershipLevel"]" asp-route-points="@ViewData["Points"]">
-        <img src="~/Image/PersonView/UpgradeButton.png" style="position:absolute; left:300px; top: 330px"/>
+        <img src="~/Image/PersonView/UpgradeButton.png" style="position:absolute; left:300px; top: 330px" />
     </a>
+    
+    
     @if (Convert.ToBoolean(ViewData["Flag"]))
     {
-        if (Convert.ToBoolean(@ViewData["result"]))
+        if ((@ViewData["result"].ToString()) == "true")
         {
             <div class="text-danger" style="position:absolute; left:300px; top: 390px">
                 Success!
             </div>
         }
-        else
+        else if ((ViewData["result"].ToString()) == "limitlevel")
+        {
+            <div class="text-danger" style="position:absolute; left:300px; top: 390px">
+                您已升至最高会员等级!
+            </div>
+        }
+        else if ((ViewData["result"].ToString()) == "false")
         {
             <div class="text-danger" style="position:absolute; left:300px; top: 390px">
                 积分余额不足!
             </div>
         }
-    }
-
+    } 
 
 </div>
-
-
-@section Scripts{
-    <script src="~/lib/vue/vue.js"></script>
-    <script src="~/lib/axios/axios.js"></script>
-    <script src="~/js/UpgradeLevelComponent.js"></script>
-}

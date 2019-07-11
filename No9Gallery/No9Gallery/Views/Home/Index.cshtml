@@ -19,10 +19,10 @@
     //
 }
 <div>
-     <a asp-controller="PictureInfo" asp-action="Index" asp-route-id=1><img src="~/image/MainPage/Show1.png" alt="image wrong" class="Show" style="position: absolute;left: 300px;top: 60px;"></a>
-     <a asp-controller="PictureInfo" asp-action="Index" asp-route-id=2><img src="~/image/MainPage/Show2.png" alt="image wrong" style="position: absolute;left: 1032px;top: 60px;" class="Show"></a>
-     <a asp-controller="PictureInfo" asp-action="Index" asp-route-id=3><img src="~/image/MainPage/Show3.png" alt="image wrong" style="position: absolute;left: 1032px;top: 332px;" class="Show"></a>
-     <a asp-controller="PictureInfo" asp-action="Index" asp-route-id=4><img src="~/image/MainPage/Show4.png" alt="image wrong" style="position: absolute;left: 1332px;top: 332px;" class="Show"></a>
+     <a asp-controller="PictureInfo" asp-action="Index" asp-route-id="Girl"><img src="~/image/MainPage/Show1.png" alt="image wrong" class="Show" style="position: absolute;left: 300px;top: 60px;"></a>
+     <a asp-controller="PictureInfo" asp-action="Index" asp-route-id="Google"><img src="~/image/MainPage/Show2.png" alt="image wrong" style="position: absolute;left: 1032px;top: 60px;" class="Show"></a>
+     <a asp-controller="PictureInfo" asp-action="Index" asp-route-id="Painting"><img src="~/image/MainPage/Show3.png" alt="image wrong" style="position: absolute;left: 1032px;top: 332px;" class="Show"></a>
+     <a asp-controller="PictureInfo" asp-action="Index" asp-route-id="A1"><img src="~/image/MainPage/Show4.png" alt="image wrong" style="position: absolute;left: 1332px;top: 332px;" class="Show"></a>
 </div>
 
 @{
@@ -54,25 +54,27 @@
 }
 <div>
     <img style="position: absolute;left: 300px;top: 1180px;" src="~/image/MainPage/组 142.png" />
-    
-        @{
-            int topp = 1230;
-            int leftt = 300;
-            int i = 0;
-            foreach (var work in Model.Works)
+
+    @{
+        int topp = 1230;
+        int leftt = 300;
+        int i = 0;
+        <img src="~/image/footimg.png" style="position:absolute; left:@(leftt)px; top: @(topp + 240)px">
+        foreach (var work in Model.Works)
+        {
+            <a asp-controller="PictureInfo" asp-action="Index" asp-route-id=@(work.work_ID)>
+                <img src="~/image/MainPage/Card.png" class="WorkCard" style="position:absolute; top:@(topp)px; left: @(leftt)px">
+                <img src="~/image/works/@(work.picture)" style="position:absolute; top:@(topp)px; left: @(leftt)px" class="Works" alt="image wrong" />
+                <span class="WorkName" style="position:absolute; top:@(topp + 200)px; left: @(leftt + 15)px">@work.headline</span>
+            </a>
+            i++;
+            leftt += 268;
+            if (i % 5 == 0)
             {
-                <a asp-controller="PictureInfo" asp-action="Index" asp-route-id=@(work.work_ID)>
-                    <img src="~/image/MainPage/Card.png" class="WorkCard" style="position:absolute; top:@(topp)px; left: @(leftt)px">
-                    <img src="~/image/works/@(work.picture)" style="position:absolute; top:@(topp)px; left: @(leftt)px" class="Works" alt="image wrong" />
-                    <span class="WorkName" style="position:absolute; top:@(topp + 200)px; left: @(leftt + 15)px">@work.headline</span>
-                </a>
-                i++;
-                leftt += 268;
-                if(i%5 == 0)
-                {
-                    topp += 260;
-                    leftt = 300;
-                }
+                topp += 260;
+                leftt = 300;
             }
+            <img src="~/image/footimg.png" style="position:absolute; left:@(leftt)px; top: @(topp + 240)px">
         }
+    }
 </div>

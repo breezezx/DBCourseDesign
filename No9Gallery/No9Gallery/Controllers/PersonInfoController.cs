@@ -85,9 +85,17 @@ namespace No9Gallery.Controllers
             var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             var massage = Request.Form;
-            string ReceiverID = Request.Form["ReceiverID"];
-            string Content = Request.Form["Content"];
-            string result = await PersonInfoservice.PostMassage(id,ReceiverID,Content,time);
+            string ReceiverID = Request.Form["ReceiverID"].ToString();
+            string Content = Request.Form["Content"].ToString();
+            if(id!=ReceiverID)
+            {
+                string result = await PersonInfoservice.PostMassage(id, ReceiverID, Content, time);
+            }
+            else
+            {
+                string result = await PersonInfoservice.PostAllMessage(id, Content, time);
+            }
+        
             return Redirect("/PersonInfo/AdminView");
         }
 
@@ -120,8 +128,8 @@ namespace No9Gallery.Controllers
         {
 
             var Info = await PersonInfoservice.GetPersonInfoAsync(id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            
-            ViewBag.ID = Info.ID;
+         
+              ViewBag.ID = Info.ID;
             ViewBag.Name = Info.Name;
             ViewBag.Password = Info.Password;
             ViewBag.Status = Info.Status;
@@ -161,7 +169,7 @@ namespace No9Gallery.Controllers
 
         //进入充值界面
         [Authorize(Roles = "Commom")]
-        public async Task<IActionResult>ChargeView(string id)
+        public async Task<IActionResult>ChargeView(string id,string flag,string result)
         {
             
             if (id != User.FindFirst(ClaimTypes.NameIdentifier).Value)
@@ -170,6 +178,8 @@ namespace No9Gallery.Controllers
 ;            List<Chargelist> ChargeList=await PersonInfoservice.GetChargeListAsync(id);
             int points = await PersonInfoservice.GetPointsAsync(id);
             ViewBag.Points = points;
+            ViewBag.Flag = flag;
+            ViewBag.result = result;
             return View(ChargeList);
         }
 
@@ -178,14 +188,20 @@ namespace No9Gallery.Controllers
         public async Task<IActionResult>Upgrade(string id,string Level,string points)
         {
             string result;
-           
-            if(Convert.ToInt32(points) >= 5000)
+            var upgradetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            var randomnum = new Random();
+            var order_no = DateTime.Now.ToString("yyyyMMddHHmmss") + "_-_" + randomnum.Next(0, 1000).ToString();
+            if (Convert.ToInt32(points) >= 5000&&Level!="5")
             {
-                 result = await PersonInfoservice.Upgrade(id,Level,points);
+                 result = await PersonInfoservice.Upgrade(id,Level,points,order_no,upgradetime);
+            }
+            else if( Convert.ToInt32(points)<5000&&Level!="5")
+            {
+                 result = "false";
             }
             else
             {
-                 result = "false";
+                result = "limitlevel";
             }
             return Redirect("/PersonInfo/UpgradeView/?id="+id+"&flag=true&result=" + result);
         }
@@ -234,6 +250,7 @@ namespace No9Gallery.Controllers
             return Redirect("/PersonInfo/ReviseView/" +id);
         }
 
+      
         //提交充值订单
         [Authorize(Roles = "Commom")]
         [HttpPost]
@@ -248,7 +265,7 @@ namespace No9Gallery.Controllers
             int points = await PersonInfoservice.GetPointsAsync(id);
             points = points + amount;
             var result = await PersonInfoservice.ChargeSubmit(order_no, id, amount, ConTent, chargetime,points);
-            return Redirect("/PersonInfo/ChargeView/" + id);
+            return Redirect("/PersonInfo/ChargeView/?id=" + id+"&flag=true&result="+result);
         }
 
         //作品上传功能
@@ -259,12 +276,13 @@ namespace No9Gallery.Controllers
             int i = 0;
             var table = Request.Form;
             IFormFile files =Request.Form.Files[0];
+            int NewWorkPoint =Convert.ToInt32(Request.Form["NewWorkPoint"]);
             string Workname = Request.Form["NewWorkName"];
             string WorkType = Request.Form["Worktype"];
             string Introduction = Request.Form["WorkIntroduction"];
             if(files!=null&&Workname!=null&&WorkType!=null&&Introduction!=null)
             {
-                string result = await PersonInfoservice.UploadWork(User.FindFirst(ClaimTypes.NameIdentifier).Value,files,Workname,WorkType,Introduction);
+                string result = await PersonInfoservice.UploadWork(User.FindFirst(ClaimTypes.NameIdentifier).Value,files,Workname,WorkType,Introduction,NewWorkPoint);
             }
             
             return Redirect("/PersonInfo/Index/" + id);

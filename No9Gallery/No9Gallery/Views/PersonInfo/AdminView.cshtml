@@ -74,7 +74,7 @@
 <div style=" width:1320px; height: 240px">
     <form asp-controller="PersonInfo" asp-action="PostMessage" method="post">
         <textarea name="Content" style="position:absolute; left: 300px; top: 480px; width: 1320px; height: 120px; overflow: visible" class="form-control" placeholder="Write some notifications.."></textarea>
-        <input type="text" name="ReceiverID " style="position:absolute; left: 300px; top: 620px; width:240px" class="form-control" placeholder="ReceiveID"/>
+        <input type="text" name="ReceiverID" style="position:absolute; left: 300px; top: 620px; width:240px" class="form-control" placeholder="ReceiveID"/>
         <input type="submit" value="Send" style="position:absolute; left: 570px; top: 620px; width:120px" class="btn btn-primary btn-block btn-flat" />
     </form>
 </div>
@@ -106,7 +106,9 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.works_ID)
+                        <a asp-controller="PictureInfo" asp-action="Index" asp-route-id="@item.works_ID" style="color:#009CFF">
+                            @Html.DisplayFor(modelItem => item.works_ID)
+                        </a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.user_ID)
