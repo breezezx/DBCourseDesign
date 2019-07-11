@@ -134,6 +134,21 @@ namespace No9Gallery.Models
 
     }
 
+    public class Comments
+    {
+        public List<Comment> comments { get; set; }
+        public string addComment { get; set; }
+    }
+
+    public class Comment
+    {
+        public string avatar { get; set; }
+        public string name { get; set; }
+        public string words { get; set; }
+        public DateTime time { get; set; }
+        public string commenterid { get; set; }
+    }
+
 
 }
 

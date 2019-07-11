@@ -16,8 +16,8 @@ namespace No9Gallery.Services
         Task<int> GetPointsAsync(string id);
         Task<string> ChargeSubmit(string order_no, string id, int amount, string ConTent, string chargetime,int points);
         Task<string> ChangeFollow(string visitid, string id);
-        Task<string> UploadWork(string Userid,IFormFile file, string Workname, string WorkType,string Introduction);
-        Task<string> Upgrade(string id,string Level,string Points);
+        Task<string> UploadWork(string Userid,IFormFile file, string Workname, string WorkType,string Introduction,int NewWorkPoint);
+        Task<string> Upgrade(string id,string Level,string Points, string order_no, string upgradetime);
 
         //新加
         Task<List<MessageList>> GetReportAsync();
@@ -25,5 +25,6 @@ namespace No9Gallery.Services
         Task<string> ChangeMessage();
         Task<List<MessageReceivelist>> GetMessageAsync(string id);
         Task<string> setRead(string msgid);
+        Task<string> PostAllMessage(string adminID,string Content,string Time);
     }
 }

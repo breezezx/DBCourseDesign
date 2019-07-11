@@ -44,7 +44,7 @@ namespace No9Gallery.Controllers
             {
                 var getUser = await _loginService.CheckLogin(user.ID, user.Password);
 
-                if (getUser != null)
+                if (getUser != null && user.ID != "0000000")
                 {
                     var claimIdentity = new ClaimsIdentity("Cookie");
                     claimIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, getUser.ID));

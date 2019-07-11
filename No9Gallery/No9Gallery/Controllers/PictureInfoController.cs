@@ -7,15 +7,21 @@ using Oracle.ManagedDataAccess.Client;
 using No9Gallery.Models;
 using No9Gallery.Services;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using System.IO;
 
 namespace /*WayKuratWeb.SimpleVueJs*/No9Gallery.Controllers
 {
+    public class thisWorkInfo
+    {
+        public static string work_id { get; set; }
+        public static string user_id { get; set; }
+        public static string workName { get; set; }
+    }
+
     [Route("/api/[controller]/[action]/")]
     public class PictureInfoController : Controller
     {
-        string getwork_ID="001";
-        //string getuser_ID = "10000";
-        int woID = 100;
         //string getuser = User.FindFirst(ClaimTypes.NameIdentifier).Value;
         private readonly IPictureInfoService _PictureInfoService;
 
@@ -25,119 +31,164 @@ namespace /*WayKuratWeb.SimpleVueJs*/No9Gallery.Controllers
         }
 
 
-        public IActionResult Index(string wID)
+        public IActionResult Index(string id)
         {
-            //getwork_id = wID;
-            return View();
+
+            var getitems = _PictureInfoService.GetPictureInfo(id);
+
+
+            thisWorkInfo.work_id = id;
+            thisWorkInfo.user_id = getitems.First().user_ID;
+            thisWorkInfo.workName = getitems.First().picture;
+            ViewBag.workuser_ID = getitems.First().user_ID;
+            ViewBag.picture = getitems.First().picture;
+
+            Comments comments = new Comments()
+            {
+                comments = _PictureInfoService.GetCommentInfo(id)
+            };
+
+            return View(comments);
         }
 
 
+        
+
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public  IActionResult GetPictureInfo()
         {
-            var getitems = await _PictureInfoService.GetAll();
+            List<WorkItem> getitems = _PictureInfoService.GetPictureInfo(thisWorkInfo.work_id);
 
             return Ok(getitems);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPictureInfo()
+        public bool ifLiked()
         {
-            var getitems = await _PictureInfoService.GetPictureInfo(getwork_ID);
-
-            return Ok(getitems);
-        }
-
-        [HttpGet]
-        public async Task<bool> ifLiked(String getuser_ID, String getwork_ID)
-        {
-            var getitems = await _PictureInfoService.ifLiked(User.FindFirst(ClaimTypes.NameIdentifier).Value,getwork_ID);
+            var getitems = (User.FindFirst(ClaimTypes.NameIdentifier).Value == null) ? false:  _PictureInfoService.ifLiked(User.FindFirst(ClaimTypes.NameIdentifier).Value, thisWorkInfo.work_id);
 
             return getitems;
         }
 
         [HttpGet]
-        public Task<bool> AddLikes()
+        [Authorize(Roles ="Commom")]
+        public bool AddLikes()
         {
-            var getitems = _PictureInfoService.AddLikes(getwork_ID, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var getitems = _PictureInfoService.AddLikes(thisWorkInfo.work_id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             return getitems;
         }
 
         [HttpGet]
-       public Task<bool> ifCollected()
+        public bool ifCollected()
         {
-            var getitems = _PictureInfoService.ifCollected( User.FindFirst(ClaimTypes.NameIdentifier).Value, getwork_ID);
+            var getitems = (User.FindFirst(ClaimTypes.NameIdentifier).Value == null) ? false : _PictureInfoService.ifCollected(User.FindFirst(ClaimTypes.NameIdentifier).Value, thisWorkInfo.work_id);
 
             return getitems;
         }
         [HttpGet]
-        public Task<bool> AddCollections()
+        [Authorize(Roles = "Commom")]
+        public bool AddCollections()
         {
-            var getitems = _PictureInfoService.AddCollections(getwork_ID, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var getitems = _PictureInfoService.AddCollections(thisWorkInfo.work_id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            return getitems;
+        }
+
+        
+        [Authorize(Roles = "Commom")]
+        public bool ifEnoughPoints()
+        {
+            var getitems = _PictureInfoService.ifEnoughPoints(thisWorkInfo.work_id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             return getitems;
         }
 
         [HttpGet]
-        public Task<bool> ifEnoughPoints()
+        [Authorize(Roles = "Commom")]
+        public bool DecreasePoints()
         {
-            var getitems = _PictureInfoService.ifEnoughPoints(getwork_ID, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var getitems = _PictureInfoService.DecreasePoints(thisWorkInfo.work_id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            Downloadpt();
+            return getitems;
+
+        }
+
+        public IActionResult Downloadpt()
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\image\\works", thisWorkInfo.workName);
+            var mem = new MemoryStream();
+            using (var streams = new FileStream(path, FileMode.Open))
+            {
+                streams.CopyTo(mem);
+            }
+            mem.Seek(0, SeekOrigin.Begin);
+
+            //string[] strArry = path.Split('/');
+            //string enco = System.Net.WebUtility.UrlEncode(thisWorkInfo.workName);
+            //Response.Headers.Add("Content-Disposition", "attachment; filename = " + enco);
+            return new FileStreamResult(mem, "application/octet-stream");
+            var stream = System.IO.File.OpenRead(path);
+            return File(stream, Path.GetFileName(path));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Commom")]
+        public bool AddReport()
+        {
+            var getitems = _PictureInfoService.AddReport(thisWorkInfo.work_id, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             return getitems;
         }
 
         [HttpGet]
-        public Task<bool> DecreasePoints()
+        [Authorize(Roles = "Commom")]
+        public bool FollowAction()
         {
-            var getitems = _PictureInfoService.DecreasePoints(getwork_ID, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var getitems = _PictureInfoService.FollowAction(User.FindFirst(ClaimTypes.NameIdentifier).Value, thisWorkInfo.work_id);
             return getitems;
         }
 
         [HttpGet]
-        public Task<bool> AddReport()
+        public bool ifFollowed()
         {
-            var getitems = _PictureInfoService.AddReport(getwork_ID, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var getitems = (User.FindFirst(ClaimTypes.NameIdentifier).Value == null) ? false : _PictureInfoService.ifFollowed(User.FindFirst(ClaimTypes.NameIdentifier).Value, thisWorkInfo.work_id);
+            return getitems;
+        }
+        [HttpGet]
+        public String GetHead()
+        {
+            var getitems = _PictureInfoService.GetHead(thisWorkInfo.work_id);
+            return getitems;
+        }
+        [HttpGet]
+        public List<String> GetTypes()
+        {
+            var getitems = _PictureInfoService.GetTypes(thisWorkInfo.work_id);
             return getitems;
         }
 
         [HttpGet]
-        public Task<bool> FollowAction()
+        public Task<bool> IfLogin()
         {
-            var getitems = _PictureInfoService.FollowAction(User.FindFirst(ClaimTypes.NameIdentifier).Value, getwork_ID);
-            return getitems;
+            if(User.Identity.Name == null)
+            {
+                return Task.FromResult(false);
+            }
+            else { return Task.FromResult(true); }
         }
 
-        [HttpGet]
-        public Task<bool> ifFollowed()
-        {
-            var getitems = _PictureInfoService.ifFollowed(User.FindFirst(ClaimTypes.NameIdentifier).Value, getwork_ID);
-            return getitems;
-        }
-        [HttpGet]
-        public async Task<List<CommentsNeededItem>> GetCommentInfo()
-        {
-            var getitems = await _PictureInfoService.GetCommentInfo(getwork_ID);
-            return getitems;
-        }
-        [HttpGet]
-        public Task<String> GetHead()
-        {
-            var getitems = _PictureInfoService.GetHead( getwork_ID);
-            return  getitems;
-        }
-        [HttpGet]
-        public Task<List<String>> GetTypes()
-        {
-            var getitems = _PictureInfoService.GetTypes( getwork_ID);
-            return getitems;
-        }
         [HttpPost]
-
-        public IActionResult AddComment( String words)
+        [Authorize(Roles = "Commom")]
+        public IActionResult AddComment(Comments newComment)
         {
-            var getitems = _PictureInfoService.AddComment(User.FindFirst(ClaimTypes.NameIdentifier).Value, getwork_ID,words);
-            return View("Index");
+            var getitems = _PictureInfoService.AddComment(User.FindFirst(ClaimTypes.NameIdentifier).Value, thisWorkInfo.work_id, newComment.addComment);
+            return RedirectToAction("Index", new { id = thisWorkInfo.work_id });
         }
 
+
+        public IActionResult DeleteWork()
+        {
+            _PictureInfoService.Delete(thisWorkInfo.work_id, thisWorkInfo.user_id, User.IsInRole("Admin"), User.FindFirstValue(ClaimTypes.NameIdentifier));
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
 

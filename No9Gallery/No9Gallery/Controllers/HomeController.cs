@@ -22,9 +22,8 @@ namespace No9Gallery.Controllers
         {
             _retrieveImages = iretrieveImages;
         }
-        
-        //[Authorize]
-        //[AllowAnonymous]
+
+
         public async Task<IActionResult> Index()
         {
             var workitems = await _retrieveImages.GetWorkItemByRandomSelectionAsync(15);
@@ -33,12 +32,49 @@ namespace No9Gallery.Controllers
             {
                 Works = workitems
             };
+            ViewBag.part1 = workitems;
+
 
             return View(homeviewmodel);
         }
 
+        public void SetUserAvatar()
+        {
+            var cur_user = new LoginUser
+            {
+                ID = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                Avatar = User.FindFirst("Avatar").Value
+            };
+            ViewBag.part2 = cur_user;
+        }
 
+        [Authorize(Roles="Commom")]
+        public async Task<IActionResult> Like()
+        {
+            var cur_user = new LoginUser
+            {
+                ID = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                Avatar = User.FindFirst("Avatar").Value
+            };
 
+            ViewBag.imagelist = await _retrieveImages.GetWorkItemInUserLikesAsync(cur_user.ID);
+
+            return View();
+        }
+
+        [Authorize(Roles = "Commom")]
+        public async Task<IActionResult> Collect()
+        {
+            var cur_user = new LoginUser
+            {
+                ID = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                Avatar = User.FindFirst("Avatar").Value
+            };
+
+            ViewBag.imagelist = await _retrieveImages.GetWorkItemInUserCollectionAsync(cur_user.ID);
+
+            return View();
+        }
 
         public async Task<IActionResult> Classification(int id = 0)            //分类界面
         {
@@ -55,7 +91,6 @@ namespace No9Gallery.Controllers
                     Works = workitems
                 };
                 ViewBag.imagelist = workitems;
-
 
 
                 return View(homeviewmodel);
@@ -104,9 +139,9 @@ namespace No9Gallery.Controllers
 
 
 
-
                 return View(homeviewmodel);
             };
+            return View();
         }
 
         public async Task<IActionResult> Search(string search_value)
@@ -124,10 +159,13 @@ namespace No9Gallery.Controllers
             {
                 ViewBag.Error = "Not Found";
             }
-            else ViewBag.Error = "Found";
+            else
+                ViewBag.Error = "Found";
 
+            SetUserAvatar();
             return View(homeviewmodel);
         }
+
 
 
         [Authorize(Roles = "Admin")]

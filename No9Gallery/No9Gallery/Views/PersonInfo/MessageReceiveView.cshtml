@@ -42,7 +42,9 @@
                 @Html.DisplayNameFor(model => model.is_read)
             </th>
 
-            <th></th>
+            <th>
+
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -60,11 +62,12 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.is_read)
-                        <form name=@item.message_ID asp-controller="PersonInfo" asp-action="setRead" method="post">
 
+                    </td>
+                    <td>
+                        <form name=@item.message_ID asp-controller="PersonInfo" asp-action="setRead" method="post">
                             <input type="text" name="toSetRead" style="display:none" value=@item.message_ID>
                             <input type="submit" value="设置为已读">
-
                         </form>
                     </td>
 
@@ -93,7 +96,7 @@
                 @Html.DisplayNameFor(model => model.is_read)
             </th>
 
-            <th></th>
+
         </tr>
     </thead>
     <tbody>
@@ -111,8 +114,6 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.is_read)
                     </td>
-
-
                 </tr>
             }
         }

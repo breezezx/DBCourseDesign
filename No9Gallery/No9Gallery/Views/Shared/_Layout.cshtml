@@ -41,6 +41,26 @@
             color: #112D4E;
             text-decoration: none;
         }
+
+        .testcontainer {
+            width: 100%;
+            min-height: 100%;
+            background-color: #ccc;
+        }
+
+        .testcontent {
+            width: 100%;
+            height: 500px; /*高度可由内容撑开*/
+            padding-bottom: 50px;
+        }
+
+        .testfooter {
+            width: 100%;
+            height: 50px;
+            margin-top: -50px; /*用来抵消content使用padding产生的高度*/
+            background-color: #666;
+        }
+
     </style>
 
     <link rel="stylesheet" href="~/css/Header/Header.css" />
@@ -102,28 +122,63 @@
                         <a style="position: absolute;left: 1520px;top: 12px;" asp-controller="PersonInfo" asp-action="AdminView" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value">
                             <img src="~/image/avatar/@User.Claims.SingleOrDefault(sa => sa.Type == "Avatar").Value" class="avatar" />
                         </a>
+                        <a asp-controller="Login" asp-action="Welcome">
+                            <img src="~/image/Header/SignOut.png" style="position:absolute; top:20px; left:1570px" />
+                        </a>
                     }
                     else
                     {
-                    <a style="position: absolute;left: 1520px;top: 12px;" asp-controller="PersonInfo" asp-action="Index" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value">
-                        <img src="~/image/avatar/@User.Claims.SingleOrDefault(sa => sa.Type == "Avatar").Value" class="avatar" />
-                    </a>
+                        <div class="submeau">
+                            <a style="position: absolute;left: 1520px;top: 12px; height: 60px; width: 60px" asp-controller="PersonInfo" asp-action="Index" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value">
+                                <img src="~/image/avatar/@User.Claims.SingleOrDefault(sa => sa.Type == "Avatar").Value" class="avatar" />
+                            </a>
+                        </div>
                     }
-                    <a asp-controller="Login" asp-action="Welcome">
-                        <img src="~/image/Header/SignOut.png" style="position:absolute; top:20px; left:1570px" />
-                    </a>
+
 
                 }
             }
 
+
+            <div id="oa_submeau" style="display:none;">
+                @{
+                    if (User.Identity.Name != null)
+                    {
+
+                        <ul style="list-style:none;">
+                            <li style="z-index:1;position: absolute;left: 1400px;top: 60px;"><img src="~/image/Header/bg.png" /></li>
+                            <li style="z-index:2;position: absolute;left: 1430px;top: 80px;font-size:20px">
+                                Hello  @User.FindFirst(ClaimTypes.NameIdentifier).Value
+                            </li>
+                            <li style="z-index:2;position: absolute;left: 1430px;top: 140px;">
+                                <a asp-controller="Home" asp-action="Follow" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value"><img src="~/image/Header/MYFollow.png" /></a>
+                            </li>
+                            <li style="z-index:2;position: absolute;left: 1430px;top: 180px;">
+                                <a asp-controller="Home" asp-action="Like" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value"><img src="~/image/Header/Likes.png" /></a>
+                            </li>
+                            <li style="z-index:2;position: absolute;left: 1430px;top: 220px;">
+                                <a asp-controller="Home" asp-action="Collect" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value"><img src="~/image/Header/Collection.png" /></a>
+                            </li>
+                            <li style="z-index:2;position: absolute;left: 1430px;top: 280px;">
+                                <a asp-controller="PersonInfo" asp-action="MessageReceiveView" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value"><img src="~/image/Header/Notifications.png" /></a>
+                            </li>
+                            <li style="z-index:2;position: absolute;left: 1430px;top: 320px;">
+                                <a asp-controller="Login" asp-action="Welcome" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value"><img src="~/image/Header/SSignOut.png" /></a>
+                            </li>
+                        </ul>
+                    }
+                }
+            </div>
         </nav>
     </header>
-    <div >
+    <div>
         <partial name="_CookieConsentPartial" />
-        <main>            
+        <main>
             @RenderBody()
         </main>
     </div>
+
+
 
 
     <environment include="Development">
@@ -145,6 +200,22 @@
         </script>
     </environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script type="text/javascript">
+        $("#oa_submeau").hide();
+        $(".submeau").hover(function () {
+            $("#oa_submeau").show();
+        }, function () {
+            $("#oa_submeau").hide();
+        })
+        // 鼠标移动到list的div上的时候list div不会被隐藏
+        $("#oa_submeau").hover(function () {
+            $("#oa_submeau").show();
+        }, function () {
+            $("#oa_submeau").hide();
+        })
+
+    </script>
 
     @RenderSection("Scripts", required: false)
 </body>
