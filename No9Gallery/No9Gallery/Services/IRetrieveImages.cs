@@ -17,6 +17,7 @@ namespace No9Gallery.Services
         Task<List<ObjectItem.WorkItem>> GetWorkItemByCategoryAsync(String category, String order);
         Task<List<ObjectItem.WorkItem>> GetWorkItemByRandomSelectionAsync(int num);
         Task<List<ObjectItem.WorkItem>> GetWorkItemInUserCollectionAsync(string user_id);
+        Task<List<ObjectItem.WorkItem>> GetWorkItemInUserFollowAsync(string user_id);
         Task<List<ObjectItem.WorkItem>> GetWorkItemInUserLikesAsync(string user_id);
     }
 
@@ -129,7 +130,7 @@ namespace No9Gallery.Services
             conn.Open();
             cmd.BindByName = true;
 
-            cmd.CommandText = "select * from work ";
+            cmd.CommandText = "select * from work order by upload_time desc";
             //OracleParameter para = new OracleParameter("category", category);
             //cmd.Parameters.Add(para);
 
@@ -216,6 +217,52 @@ namespace No9Gallery.Services
 
             return Task.FromResult(paraWorks);
         }
+
+
+        public Task<List<ObjectItem.WorkItem>> GetWorkItemInUserFollowAsync(string user_id)
+        {
+            List<ObjectItem.WorkItem> paraWorks = new List<ObjectItem.WorkItem>();
+
+            OracleConnection conn = new OracleConnection(ConString.conString);
+
+            OracleCommand cmd = conn.CreateCommand();
+
+
+            conn.Open();
+            cmd.BindByName = true;
+
+            cmd.CommandText = "select work_ID ,Followed_ID, user_ID ,headline ,introduction,picture ,likes_num ," +
+                "collect_num ,upload_time ,points_need" +
+                " from follow, work where Followed_ID = user_ID and Follower_ID = :userID ";
+            OracleParameter para = new OracleParameter("userID", user_id);
+            cmd.Parameters.Add(para);
+
+            OracleDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                ObjectItem.WorkItem workitem = new ObjectItem.WorkItem
+                {
+                    work_ID = reader.GetString(0),
+                    user_ID = reader.GetString(1),
+                    headline = reader.GetString(3),
+                    introduction = reader.GetString(4),
+                    picture = reader.GetString(5),
+                    likes_num = reader.GetInt32(6),
+                    collect_num = reader.GetInt32(7),
+                    upload_time = reader.GetDateTime(8),
+                    points_need = reader.GetInt32(9)
+                };
+                paraWorks.Add(workitem);
+
+            }
+
+            reader.Close();
+            conn.Close();
+
+            return Task.FromResult(paraWorks);
+        }
+
 
         public Task<List<ObjectItem.WorkItem>> GetWorkItemInUserLikesAsync(string user_id)
         {

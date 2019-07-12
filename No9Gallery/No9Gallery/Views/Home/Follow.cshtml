@@ -1,33 +1,33 @@
 ﻿@{
-    ViewData["Title"] = "Search";
+    ViewData["Title"] = "Collect";
 }
 
 <head>
     <link rel="stylesheet" href="~/css/MainPage/MainPage.css" />
 </head>
 
-<div style="position:absolute;top:60px;left:300px;box-shadow: 0 2px 4px rgba(0, 0, 0, 0.10);border-radius: 8px;">
-    <img src="~/image/Search/banner.png">
+<div class="collect-banner" style="height:300px;position:absolute;top:60px;left:300px;right:300px;">
+    <img src="~/image/Search/banner.png" style="height:300px;width:1320px;">
 </div>
 
-<div  style="position:absolute;top:430px;left:300px;">
-    <img src="~/image/Search/result.png" />
+<div class="collect-png" style="height:30px;position:absolute;top:420px;left:300px;">
+    <img src="~/image/MainPage/Following.png" style="height:30px;position:absolute;top:0px;left:0px;" />
 </div>
 
-<div class="search-image">
+<div class="collect-image">
     @{
         int topp = 480;
         int leftt = 300;
         int i = 0;
         int cur = 0;
-        <img src="~/image/footimg.png" style="position:absolute; left:@(leftt)px; top: @(topp + 240)px">
+        <img src="~/image/footimg.png" style="position:absolute; left:@(leftt)px; top: @(topp)px">
         foreach (var work in ViewBag.imagelist)
         {
             if (cur == ViewBag.imagelist.Count) { break; }
             <a asp-controller="PictureInfo" asp-action="Index" asp-route-id="@ViewBag.imagelist[i].work_ID">
                 <img src="~/image/MainPage/Card.png" class="WorkCard" style="position:absolute; top:@(topp)px; left: @(leftt)px">
                 <img src="~/image/works/@(ViewBag.imagelist[i].picture)" style="position:absolute; top:@(topp)px; left: @(leftt)px" class="Works" alt="image wrong">
-                <span class="WorkName" style="position:absolute; top:@(topp + 200)px; left: @(leftt + 15)px">@ViewBag.imagelist[i].headline</span>
+                <span class="WorkName" style="position:absolute; top:@(topp + 200)px; left: @(leftt + 16)px">@ViewBag.imagelist[i].headline</span>
             </a>
             i++;
             leftt += 268;
@@ -40,8 +40,7 @@
         }
         if (ViewBag.imagelist.Count == 0)
         {
-            <div style="height:60px;width:1320px;position:absolute;top:@(topp + 180)px;left:300px;text-align:center;line-height:60px;font-size:30px;font-weight:bold;"> Not Found!</div>
-
+            <div style="height:60px;width:1320px;position:absolute;top:@(topp + 180)px;left:300px;text-align:center;line-height:60px;font-size:30px;font-weight:bold;"> Empty</div>
         }
     }
 </div>

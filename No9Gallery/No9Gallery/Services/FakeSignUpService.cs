@@ -62,8 +62,8 @@ namespace No9Gallery.Services
                         cmd.CommandText = "insert into common_user values(" +
                             "'" + signUpUser.ID + "'" + "," +
                             "'" + "No Introduction" + "'" + "," +
-                            + 0 + "," +
-                            + 2000 + ")";
+                            + 2000 + "," +
+                            + 0 + ")";
 
                         await cmd.ExecuteNonQueryAsync();
 
