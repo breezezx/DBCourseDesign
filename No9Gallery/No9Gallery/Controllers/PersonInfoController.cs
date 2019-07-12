@@ -237,16 +237,16 @@ namespace No9Gallery.Controllers
             string id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             string nowName = User.FindFirstValue(ClaimTypes.Name);
 
+            string Result = await PersonInfoservice.Uploadavatar(id, files);
             await HttpContext.SignOutAsync();
             var claimIdentity = new ClaimsIdentity("Cookie");
             claimIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, id));
             claimIdentity.AddClaim(new Claim(ClaimTypes.Name, nowName));
-            claimIdentity.AddClaim(new Claim("Avatar", "Default.png"));
+            claimIdentity.AddClaim(new Claim("Avatar", Result));
             claimIdentity.AddClaim(new Claim(ClaimTypes.Role, "Commom"));
             var claimsPrincipal = new ClaimsPrincipal(claimIdentity);
             await HttpContext.SignInAsync(claimsPrincipal);
-
-            string Result= await PersonInfoservice.Uploadavatar(id,files);                                    
+                                   
             return Redirect("/PersonInfo/ReviseView/" +id);
         }
 

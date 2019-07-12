@@ -38,16 +38,6 @@ namespace No9Gallery.Controllers
             return View(homeviewmodel);
         }
 
-        public void SetUserAvatar()
-        {
-            var cur_user = new LoginUser
-            {
-                ID = User.FindFirst(ClaimTypes.NameIdentifier).Value,
-                Avatar = User.FindFirst("Avatar").Value
-            };
-            ViewBag.part2 = cur_user;
-        }
-
         [Authorize(Roles="Commom")]
         public async Task<IActionResult> Like()
         {
@@ -72,6 +62,20 @@ namespace No9Gallery.Controllers
             };
 
             ViewBag.imagelist = await _retrieveImages.GetWorkItemInUserCollectionAsync(cur_user.ID);
+
+            return View();
+        }
+
+        [Authorize(Roles = "Commom")]
+        public async Task<IActionResult> Follow()
+        {
+            var cur_user = new LoginUser
+            {
+                ID = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                Avatar = User.FindFirst("Avatar").Value
+            };
+
+            ViewBag.imagelist = await _retrieveImages.GetWorkItemInUserFollowAsync(cur_user.ID);
 
             return View();
         }
@@ -162,7 +166,7 @@ namespace No9Gallery.Controllers
             else
                 ViewBag.Error = "Found";
 
-            SetUserAvatar();
+
             return View(homeviewmodel);
         }
 

@@ -84,9 +84,7 @@
                 <li style="position: absolute;left: 520px;top: 0px;">
                     <a asp-area="" asp-controller="Home" asp-action="Classification"><img src="~/image/Header/Classification.png" /></a>
                 </li>
-                <li style="position: absolute;left: 660px;top: 0px;">
-                    <a asp-area="" asp-controller="Home" asp-action="Follow"><img src="~/image/Header/Follow.png" /></a>
-                </li>
+
 
             </ul>
             <style type="text/css">
@@ -95,7 +93,7 @@
                 }
             </style>
             <form asp-action="Search" asp-controller="Home" class="parent">
-                <input style="position: absolute;left: 1200px;top: 12px;" type="text" class="search-box" placeholder="Search" name="search_value">
+                <input style="position: absolute;left: 1260px;top: 12px;" type="text" class="search-box" placeholder="Search" name="search_value">
                 <button style="position: absolute;left: 1458px;top: 20px;" type="submit" class="search-btn"></button>
             </form>
 
@@ -147,9 +145,11 @@
 
                         <ul style="list-style:none;">
                             <li style="z-index:1;position: absolute;left: 1400px;top: 60px;"><img src="~/image/Header/bg.png" /></li>
-                            <li style="z-index:2;position: absolute;left: 1430px;top: 80px;font-size:20px">
-                                Hello  @User.FindFirst(ClaimTypes.NameIdentifier).Value
-                            </li>
+                            <a asp-action="Index" asp-controller="PersonInfo" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value">
+                                <li style="z-index:2;position: absolute;left: 1430px;top: 78px;font-size:20px">
+                                    Hello  @User.FindFirst(ClaimTypes.Name).Value
+                                </li>
+                            </a>
                             <li style="z-index:2;position: absolute;left: 1430px;top: 140px;">
                                 <a asp-controller="Home" asp-action="Follow" asp-route-id="@User.FindFirst(ClaimTypes.NameIdentifier).Value"><img src="~/image/Header/MYFollow.png" /></a>
                             </li>

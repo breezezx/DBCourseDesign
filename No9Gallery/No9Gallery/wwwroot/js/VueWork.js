@@ -297,24 +297,23 @@ var FollowComponent = new Vue({
             axios.get('/api/pictureinfo/iflogin/')
                 .then(function (response) {
                     self.is_login = response.data;
+                    if (self.is_login == true) {
+                        axios.get('/api/pictureinfo/iffollowed')
+                            .then(function (response) {
+                                self.isFollowed = response.data;
+                                if (self.isFollowed == true)
+                                    self.follow_photo = "/image/work_res/followed.png";
+                                else if (self.isFollowed == false)
+                                    self.follow_photo = "/image/work_res/follow.png";
+                            })
+                            .catch(function (error) {
+                                alert("ERROR:" + (error.message | error));
+                            });
+                    }
                 })
                 .catch(function (error) {
                     alert("error11111111111");
                 });
-            if (self.is_login==true) {
-            axios.get('/api/pictureinfo/iffollowed')
-                .then(function (response) {
-                    self.isFollowed = response.data;
-                    if (self.isFollowed == true)
-                        self.follow_photo = "/image/work_res/followed.png";
-                    else if (self.isFollowed == false)
-                        self.follow_photo = "/image/work_res/follow.png";
-                })
-                .catch(function (error) {
-                    alert("ERROR:" + (error.message | error));
-                });
-            }
-            
         },
         follow: function () {
             var self = this;
