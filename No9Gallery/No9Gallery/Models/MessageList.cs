@@ -15,7 +15,7 @@ namespace No9Gallery.Models
         public string user_ID { get; set; }
         [Display(Name = "Report Time")]
         public DateTime report_time { get; set; }
-        [Display(Name = "Report Contene")]
+        [Display(Name = "Report Content")]
         public string report_content { get; set; }
         [Display(Name = "State")]
         public string state { get; set; }

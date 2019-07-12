@@ -161,7 +161,6 @@ namespace No9Gallery.Services
                                 if(reader.GetString(0)!="Default.png")
                                 {
                                     oldavatarpath = "..\\No9Gallery\\wwwroot\\image\\avatar\\" + reader.GetString(0);
-                                    File.Delete(oldavatarpath);
                                 }                               
                                reader.Dispose();
                             }
@@ -186,7 +185,7 @@ namespace No9Gallery.Services
                 }
 
 
-                return "succed";
+                return fileName;
             }
             else
                 return "Empty Image";
@@ -496,7 +495,7 @@ namespace No9Gallery.Services
                     {
                         con.Open();
                         cmd.BindByName = true;
-                        cmd.CommandText = "SELECT * FROM REPORT";
+                        cmd.CommandText = "SELECT * FROM REPORT order by state desc";
                         OracleDataAdapter myadapter = new OracleDataAdapter(cmd);
                         DataTable dt = new DataTable();
                         myadapter.Fill(dt);

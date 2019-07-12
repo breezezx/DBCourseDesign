@@ -54,6 +54,7 @@
         .commentAvatar {
             width: 40px;
             height: 40px;
+            object-fit: cover;
             border-radius: 6px;
             box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
         }
@@ -139,13 +140,13 @@
             if (!User.Identity.IsAuthenticated)
             {
                 <a asp-action="Welcome" asp-controller="Login">
-                    <img src="/image/work_res/complain.png" style="position:absolute; top: 832px; left: 1400px" />
+                    <img src="/image/work_res/complain.png" style="position:absolute; top: 828px; left: 1390px" />
                 </a>
             }
             else if (!(User.IsInRole("Admin") || (string)ViewData["workuser_ID"] == User.FindFirstValue(ClaimTypes.NameIdentifier)))
             {
                 <div id="report-component">
-                    <img src="/image/work_res/complain.png" v-on:click="addReport" alt="complain" id="complain" style="position:absolute; top: 832px; left: 1400px" />
+                    <img src="/image/work_res/complain.png" v-on:click="addReport" alt="complain" id="complain" style="position:absolute; top: 828px; left: 1390px" />
                 </div>
             }
 
@@ -163,11 +164,11 @@
                 <div id="follow-component" style="position:absolute;left:540px;top:942px">
                     <div v-if="is_login === false">
                         <a asp-action="Welcome" asp-controller="Login">
-                            <img src="/image/work_res/follow.png" />
+                            <img src="/image/work_res/follow.png" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16); border-radius: 18px"/>
                         </a>
                     </div>
                     <div v-else>
-                        <img :src="follow_photo" v-on:click="follow" alt="follow" id="follow" />
+                        <img :src="follow_photo" v-on:click="follow" alt="follow" id="follow" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16); border-radius: 18px"/>
                     </div>
                 </div>
 
