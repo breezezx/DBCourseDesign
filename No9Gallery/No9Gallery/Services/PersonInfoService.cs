@@ -128,17 +128,24 @@ namespace No9Gallery.Services
                 return "Doesn't received image";
             long size = files.Sum(f => f.Length);
 
-            var avatarfolder = "..\\No9Gallery\\wwwroot\\image\\avatar";
-            if (!Directory.Exists(avatarfolder))
-                Directory.CreateDirectory(avatarfolder);
-
+            var avatarfolder1 = "..\\No9Gallery\\wwwroot\\image\\avatar";
+            var avatarfolder2 = "..\\Publish\\wwwroot\\image\\avatar";
+            if (!Directory.Exists(avatarfolder1))
+                Directory.CreateDirectory(avatarfolder1);
+            if (!Directory.Exists(avatarfolder2))
+                Directory.CreateDirectory(avatarfolder2);
             if (files[0].Length > 0)
             {
                 var fileName = DateTime.Now.ToString("yyyyMMddHHmmss")
                     + Path.GetExtension(files[0].FileName);
                 
-                var filePath = Path.Combine(avatarfolder, fileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                var filePath1 = Path.Combine(avatarfolder1, fileName);
+                var filePath2 = Path.Combine(avatarfolder2, fileName);
+                using (var stream = new FileStream(filePath1, FileMode.Create))
+                {
+                    await files[0].CopyToAsync(stream);
+                }
+                using (var stream = new FileStream(filePath2, FileMode.Create))
                 {
                     await files[0].CopyToAsync(stream);
                 }
@@ -391,8 +398,14 @@ namespace No9Gallery.Services
 
            
             var Worksfolder = "..\\No9Gallery\\wwwroot\\image\\works\\";
+            var worksfolder2 = "\\Publish\\wwwroot\\image\\works";
+            var worksfolder3 = "..\\image\\works";
             if (!Directory.Exists(Worksfolder))
                 Directory.CreateDirectory(Worksfolder);
+            if (!Directory.Exists(worksfolder2))
+                Directory.CreateDirectory(worksfolder2);
+            if (!Directory.Exists(worksfolder3))
+                Directory.CreateDirectory(worksfolder3);
             //随机产生作品ID
             var randomnum = new Random();           
             var fileid = DateTime.Now.ToString("yyyyMMddHHmmss")+randomnum.Next(0,1000).ToString();
@@ -407,7 +420,14 @@ namespace No9Gallery.Services
             {
                 await file.CopyToAsync(stream);
             }
-
+            using (var stream = new FileStream(worksfolder2 + fileid + Path.GetExtension(file.FileName), FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            using (var stream = new FileStream(worksfolder3 + fileid + Path.GetExtension(file.FileName), FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
 
             using (OracleConnection con = new OracleConnection(ConString.conString))
             {
